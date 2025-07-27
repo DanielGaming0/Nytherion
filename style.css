@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0d0d0d;
+  font-family: 'Courier New', Courier, monospace;
+  color: #39ff14; /* verde neon estilo Minecraft */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  text-align: center;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #39ff14;
+  text-shadow: 0 0 10px #39ff14;
+}
+
+h1 span {
+  color: #00ccff;
+  text-shadow: 0 0 10px #00ccff;
+}
+
+#countdown {
+  font-size: 3em;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 0 0 10px #00ccff;
+}
