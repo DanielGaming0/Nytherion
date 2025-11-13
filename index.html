@@ -10,582 +10,1106 @@
     
     <style>
         :root {
-            /* Tema Padrão (Dark) */
-            --accent-gradient: linear-gradient(90deg, #00F260, #0575E6);
-            --bg-image: linear-gradient(315deg, #243B55, #141E30);
-            --card-bg-color: rgba(255, 255, 255, 0.05);
-            --card-border-color: rgba(255, 255, 255, 0.1);
-            --text-primary-color: #ffffff;
-            --text-secondary-color: #a0aec0;
-            --input-bg-color: rgba(0, 0, 0, 0.2);
-            --input-border-color: rgba(255, 255, 255, 0.2);
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --danger-color: #e53e3e;
-            --success-color: #38a169;
-            --draft-color: #718096;
+            --color-accent-1: #00F260;
+            --color-accent-2: #0575E6;
+            --color-bg-primary: #141E30;
+            --color-text-primary: #ffffff;
+            --color-text-secondary: #a0aec0;
+            --color-card-bg: rgba(255, 255, 255, 0.05);
+            --color-card-border: rgba(255, 255, 255, 0.1);
+            --color-input-bg: rgba(0, 0, 0, 0.2);
+            --color-input-border: rgba(255, 255, 255, 0.2);
+            --color-topbar-bg: rgba(20, 30, 48, 0.7);
+            --color-settings-bg: rgba(20, 30, 48, 0.98);
+            --color-overlay-bg: rgba(0, 0, 0, 0.5);
+            
+            --color-danger: #e53e3e;
+            --color-success: #38a169;
+            --color-warning: #ed8936;
+            --color-info: #3182ce;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+            --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.3);
+
+            --transition-fast: 0.15s ease-out;
+            --transition-base: 0.3s ease-out;
         }
 
-        [data-theme='light'] {
-            --accent-gradient: linear-gradient(90deg, #00c66c, #0072ff);
-            --bg-image: linear-gradient(315deg, #e2e8f0, #f8fafc);
-            --card-bg-color: rgba(255, 255, 255, 0.7);
-            --card-border-color: rgba(0, 0, 0, 0.08);
-            --text-primary-color: #1a202c;
-            --text-secondary-color: #4a5568;
-            --input-bg-color: rgba(0, 0, 0, 0.04);
-            --input-border-color: rgba(0, 0, 0, 0.1);
-            --shadow-color: rgba(0, 0, 0, 0.1);
+        [data-theme="light"] {
+            --color-bg-primary: #f5f7fa;
+            --color-text-primary: #1a202c;
+            --color-text-secondary: #4a5568;
+            --color-card-bg: rgba(255, 255, 255, 0.95);
+            --color-card-border: rgba(0, 0, 0, 0.08);
+            --color-input-bg: rgba(0, 0, 0, 0.03);
+            --color-input-border: rgba(0, 0, 0, 0.15);
+            --color-topbar-bg: rgba(255, 255, 255, 0.85);
+            --color-settings-bg: rgba(248, 250, 252, 0.99);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-
         body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--text-primary-color);
-            background-image: var(--bg-image);
-            background-attachment: fixed;
-            background-size: cover;
-            transition: background-image 0.5s ease, color 0.5s ease;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
             overflow-x: hidden;
-        }
-        
-        /* --- LAYOUT E CABEÇALHO --- */
-        .top-bar { 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            padding: 1rem 2rem; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: var(--card-bg-color); 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px); 
-            border-bottom: 1px solid var(--card-border-color); 
-            transform: translateZ(0); 
-        }
-        .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-primary-color); }
-
-        .container { max-width: 900px; margin: 1rem auto; padding: 1rem; }
-        header { text-align: center; margin-bottom: 3rem; animation: fadeInDown 1s ease-out; }
-        header h1 { font-size: 3.5rem; font-weight: 700; letter-spacing: 1px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        header p { color: var(--text-secondary-color); font-size: 1.1rem; margin-top: 0.5rem; }
-        #welcomeMessage { color: var(--text-secondary-color); font-size: 1.2rem; margin-bottom: 1rem; }
-
-        /* --- CARD DE VIDRO --- */
-        .card { 
-            background: var(--card-bg-color); 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px); 
-            border: 1px solid var(--card-border-color); 
-            border-radius: 20px; 
-            padding: 2.5rem; 
-            margin-bottom: 2rem; 
-            box-shadow: 0 8px 32px 0 var(--shadow-color); 
-            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-            animation: fadeInUp 0.5s ease-out forwards; 
-            opacity: 0; 
-            will-change: transform;
-            contain: layout style paint;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        
-        @media (prefers-reduced-motion: no-preference) {
-            .card:hover { transform: translateY(-8px); }
+            line-height: 1.6;
+            transition: background-color var(--transition-base), color var(--transition-base);
         }
 
-        .card h2 { font-size: 1.6rem; color: var(--text-primary-color); margin-bottom: 2rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--card-border-color); font-weight: 600; }
-        
-        /* --- BOTÕES E FORMULÁRIOS --- */
-        .btn { 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 0.75rem; 
-            padding: 0.8rem 1.5rem; 
-            border: none; 
-            border-radius: 12px; 
-            font-size: 1rem; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-            text-align: center; 
-            will-change: transform;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        
-        @media (prefers-reduced-motion: no-preference) {
-            .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
-            .btn:active { transform: translateY(-1px) scale(0.98); }
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) var(--space-lg);
+            background: var(--color-topbar-bg);
+            border-bottom: 1px solid var(--color-card-border);
+            backdrop-filter: blur(4px);
         }
 
-        .btn-primary { background: var(--accent-gradient); color: white; width: 100%; padding: 1rem; font-size: 1.1rem; }
-        .btn-secondary { background-color: var(--input-bg-color); color: var(--text-primary-color); border: 1px solid var(--input-border-color); }
-        .btn-secondary:hover { background-color: rgba(255, 255, 255, 0.15); }
-        [data-theme='light'] .btn-secondary:hover { background-color: rgba(0, 0, 0, 0.08); }
-        
-        .input-group { margin-bottom: 1.2rem; }
-        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: var(--text-secondary-color); }
-        .input-group input, .input-group select { width: 100%; padding: 1rem; background: var(--input-bg-color); border: 1px solid var(--input-border-color); border-radius: 12px; font-size: 1rem; color: var(--text-primary-color); font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
-        .input-group select option { background-color: #2d3748; }
-        [data-theme='light'] .input-group select option { background-color: #fff; }
-        .input-group input:focus, .input-group select:focus { outline: none; border-color: #0575E6; box-shadow: 0 0 0 3px rgba(5, 117, 230, 0.3); }
-
-        /* --- MENU DE CONFIGURAÇÕES --- */
-        .settings-btn { background: transparent; border: none; cursor: pointer; color: var(--text-primary-color); }
-        .settings-btn svg { width: 30px; height: 30px; stroke: var(--text-primary-color); }
-        .settings-panel { 
-            position: fixed; 
-            top: 0; 
-            right: -350px; 
-            width: 320px; 
-            height: 100%; 
-            background: var(--card-bg-color); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px); 
-            border-left: 1px solid var(--card-border-color); 
-            box-shadow: -10px 0 30px rgba(0,0,0,0.2); 
-            z-index: 200; 
-            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-            padding: 1.5rem; 
-            display: flex; 
-            flex-direction: column; 
-            transform: translateZ(0);
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            color: var(--color-text-primary);
+            cursor: pointer;
+            padding: var(--space-sm);
+            border-radius: var(--radius-md);
+            transition: opacity var(--transition-fast);
+        }
+
+        .btn-icon:hover { background: rgba(0, 0, 0, 0.05); }
+        .btn-icon svg { width: 24px; height: 24px; stroke: currentColor; stroke-width: 1.5; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: var(--space-md); }
+        .header { text-align: center; margin-bottom: var(--space-2xl); }
+        .header h1 {
+            font-size: clamp(2.5rem, 8vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p { font-size: 1.1rem; color: var(--color-text-secondary); }
+
+        .card {
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--color-card-border);
+        }
+
+        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+
+        .btn {
+            padding: var(--space-md) var(--space-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2));
+            color: white;
+            width: 100%;
+            padding: var(--space-lg);
+            box-shadow: 0 4px 12px rgba(0, 242, 96, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--color-input-bg);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-input-border);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--space-sm);
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: var(--space-md);
+            background: var(--color-input-bg);
+            border: 1px solid var(--color-input-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color var(--transition-fast);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--color-accent-2);
+            box-shadow: 0 0 0 3px rgba(5, 117, 230, 0.15);
+        }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-lg); }
+        .form-actions { display: flex; gap: var(--space-md); margin-top: var(--space-xl); flex-wrap: wrap; }
+        .form-actions .btn { flex: 1; min-width: 120px; }
+
+        .history-list { display: flex; flex-direction: column; gap: var(--space-md); }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-lg);
+            background: var(--color-input-bg);
+            border-radius: var(--radius-md);
+            border-left: 4px solid transparent;
+            transition: all var(--transition-fast);
+        }
+
+        .history-item:hover { transform: translateX(8px); border-left-color: var(--color-accent-1); }
+        .history-item-info h3 { font-size: 1rem; margin-bottom: var(--space-xs); font-weight: 600; }
+        .history-item-info p { font-size: 0.85rem; color: var(--color-text-secondary); }
+        .history-item-actions { display: flex; gap: var(--space-sm); align-items: center; }
+        .status-badge {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-xl); }
+        .result-item {
+            padding: var(--space-lg);
+            background: var(--color-input-bg);
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--color-accent-1);
+        }
+
+        .result-item strong { display: block; font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: var(--space-xs); }
+        .result-item span { display: block; font-size: 1.5rem; font-weight: 600; }
+
+        .alert {
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            border-left: 4px solid;
+        }
+
+        .alert-danger { background: rgba(229, 62, 62, 0.1); border-left-color: var(--color-danger); color: #ff6b6b; }
+        .alert-warning { background: rgba(237, 137, 54, 0.1); border-left-color: var(--color-warning); color: #ffa500; }
+        .alert-success { background: rgba(56, 161, 105, 0.1); border-left-color: var(--color-success); color: #68d391; }
+
+        .final-grade {
+            text-align: center;
+            padding: var(--space-2xl) var(--space-lg);
+        }
+
+        .final-grade-value {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-overlay-bg);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-base);
+            z-index: 99;
+        }
+
+        .settings-overlay.active { opacity: 1; pointer-events: all; }
+
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 320px;
+            height: 100vh;
+            background: var(--color-settings-bg);
+            z-index: 100;
+            transition: right var(--transition-base) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            padding: var(--space-lg);
+            overflow-y: auto;
+        }
+
         .settings-panel.active { right: 0; }
-        .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .settings-header h2 { font-size: 1.5rem; color: var(--text-primary-color); }
-        .settings-section { margin-bottom: 2rem; }
-        .settings-section h3 { margin-bottom: 1rem; color: var(--text-secondary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .settings-section { margin-bottom: var(--space-xl); }
+        .settings-section h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--color-text-secondary); margin-bottom: var(--space-md); }
 
-        /* Theme Toggle Switch */
-        .theme-switch-wrapper { display: flex; align-items: center; justify-content: space-between; }
-        .theme-switch { display: inline-block; height: 34px; position: relative; width: 60px; }
-        .theme-switch input { display:none; }
-        .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; }
-        .slider:before { background-color: #fff; bottom: 4px; content: ""; height: 26px; left: 4px; position: absolute; transition: .4s; width: 26px; }
-        input:checked + .slider { background-image: var(--accent-gradient); }
-        input:checked + .slider:before { transform: translateX(26px); }
-        .slider.round { border-radius: 34px; }
-        .slider.round:before { border-radius: 50%; }
-
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
-        .overlay.active { opacity: 1; pointer-events: all; }
-
-        /* --- OUTROS ESTILOS --- */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
-        .form-actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
-        .history-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 1.2rem 1.5rem; 
-            background: var(--input-bg-color); 
-            border-radius: 12px; 
-            border-left: 4px solid transparent; 
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-            will-change: transform;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        
-        @media (prefers-reduced-motion: no-preference) {
-            .history-item:hover { transform: translateX(10px); border-left: 4px solid #00F260; }
+        .toggle-checkbox {
+            position: relative;
+            width: 50px;
+            height: 28px;
         }
 
-        #final-grade { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 5rem; font-weight: 700; }
+        .toggle-checkbox input { display: none; }
+        .toggle-checkbox label {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #cbd5e0;
+            border-radius: 34px;
+            cursor: pointer;
+            transition: background-color var(--transition-base);
+        }
+
+        .toggle-checkbox label:after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: left var(--transition-base);
+        }
+
+        .toggle-checkbox input:checked + label {
+            background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2));
+        }
+
+        .toggle-checkbox input:checked + label:after { left: 24px; }
+
         .hidden { display: none !important; }
-        
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Para usuários que preferem reduzir movimento */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Otimização para dispositivos touch */
-        @media (hover: none) and (pointer: coarse) {
-            .card:hover, .history-item:hover {
-                transform: none;
-            }
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-actions { flex-direction: column; }
+            .form-actions .btn { width: 100%; }
+            .history-item { flex-direction: column; align-items: flex-start; }
+            .history-item-actions { width: 100%; margin-top: var(--space-md); }
+            .settings-panel { width: 100%; right: -100%; }
+            .results-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body data-theme="dark">
 
-    <div class="top-bar">
-        <span class="logo">ElsonAvalia</span>
-        <button class="settings-btn" id="openSettingsBtn">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+    <div class="topbar">
+        <div class="logo">ElsonAvalia</div>
+        <button class="btn-icon" id="btnSettings">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
         </button>
     </div>
 
-    <aside class="settings-panel" id="settingsPanel">
-        <div class="settings-header"><h2>Configurações</h2><button class="settings-btn" id="closeSettingsBtn" style="font-size: 2rem; line-height: 1;">&times;</button></div>
+    <div class="settings-overlay" id="settingsOverlay"></div>
+    <div class="settings-panel" id="settingsPanel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xl);">
+            <h2>Configurações</h2>
+            <button class="btn-icon" id="btnCloseSettings"><span style="font-size: 1.5rem;">✕</span></button>
+        </div>
+
         <div class="settings-section">
             <h3>Perfil</h3>
-            <div class="input-group"><label for="profileName">Seu Nome</label><input type="text" id="profileName" placeholder="Ex: Prof. Elson"></div>
-            <button class="btn btn-secondary" id="saveProfileBtn" style="width: 100%;">Salvar Perfil</button>
+            <div class="form-group">
+                <label for="profileName">Seu Nome</label>
+                <input type="text" id="profileName" placeholder="Ex: Prof. Elson">
+            </div>
+            <button class="btn btn-secondary" id="btnSaveProfile" style="width: 100%;">Salvar Perfil</button>
         </div>
+
         <div class="settings-section">
-            <h3>Design</h3>
-            <div class="theme-switch-wrapper"><span id="themeLabel">Tema Escuro</span><label class="theme-switch"><input type="checkbox" id="themeToggle"><span class="slider round"></span></label></div>
-        </div>
-        <div class="settings-section">
-            <h3>Gerenciar Dados</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                <button class="btn btn-secondary" id="exportDataBtn">Exportar Backup</button>
-                <button class="btn btn-secondary" id="importDataBtn">Importar Backup</button>
-                <input type="file" id="importFileInput" class="hidden" accept=".json">
-                <button class="btn" id="clearDataBtn" style="background-color: var(--danger-color); color: white;">Limpar Histórico</button>
+            <h3>Tema</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Tema Escuro</span>
+                <div class="toggle-checkbox">
+                    <input type="checkbox" id="themeToggle">
+                    <label for="themeToggle"></label>
+                </div>
             </div>
         </div>
-    </aside>
-    <div class="overlay" id="overlay"></div>
+
+        <div class="settings-section">
+            <h3>Dados</h3>
+            <button class="btn" id="btnClear" style="width: 100%; background-color: var(--color-danger); color: white;">Limpar Histórico</button>
+        </div>
+    </div>
 
     <div class="container">
-        <!-- TELA PRINCIPAL (MENU) -->
-        <main id="mainMenu">
-            <header>
+        <main id="screenMenu">
+            <div class="header">
                 <h1>ElsonAvalia</h1>
-                <p id="welcomeMessage">A nova era das avaliações físicas.</p>
-            </header>
-            <section class="menu-actions card"><button id="btnNewEvaluation" class="btn btn-primary">Iniciar Nova Avaliação</button></section>
-            <section class="card" id="historySection"><h2>Histórico de Avaliações</h2><div id="historyList"></div><p id="emptyHistoryMessage" class="hidden">Nenhuma avaliação encontrada.</p></section>
+                <p id="welcomeText" style="color: var(--color-text-secondary);">A nova era das avaliações físicas.</p>
+            </div>
+
+            <div class="card">
+                <button class="btn btn-primary" id="btnNewEval">Iniciar Nova Avaliação</button>
+            </div>
+
+            <div class="card">
+                <h2>Histórico de Avaliações</h2>
+                <div class="history-list" id="historyList"></div>
+                <p id="emptyHistory" class="hidden" style="text-align: center; color: var(--color-text-secondary);">Nenhuma avaliação encontrada</p>
+            </div>
         </main>
-        
-        <!-- TELA DE AVALIAÇÃO (FORMULÁRIO) - HTML COMPLETO -->
-        <main id="evaluationScreen" class="hidden">
-            <form id="evaluationForm" data-evaluation-id="">
-                <section class="card">
-                    <h2 style="animation-delay: 0.1s;">Dados do Aluno</h2>
-                    <div class="grid-container">
-                        <div class="input-group"><label for="name">Nome:</label><input type="text" id="name" required placeholder="Nome completo"></div>
-                        <div class="input-group"><label for="age">Idade:</label><input type="number" id="age" required placeholder="Ex: 25" min="1"></div>
-                        <div class="input-group"><label for="gender">Sexo:</label><select id="gender" required><option value="male">Masculino</option><option value="female">Feminino</option></select></div>
-                        <div class="input-group"><label for="weight">Peso (kg):</label><input type="number" step="0.1" id="weight" required placeholder="Ex: 70.5" min="1"></div>
-                        <div class="input-group"><label for="height">Altura (cm):</label><input type="number" id="height" required placeholder="Ex: 175" min="1"></div>
+
+        <main id="screenForm" class="hidden">
+            <form id="evalForm">
+                <div class="card">
+                    <h2>Dados do Aluno</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Nome *</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Idade *</label>
+                            <input type="number" id="age" required min="18" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Sexo *</label>
+                            <select id="gender" required>
+                                <option value="">Selecione...</option>
+                                <option value="male">Masculino</option>
+                                <option value="female">Feminino</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Peso (kg) *</label>
+                            <input type="number" id="weight" required step="0.1" min="30" max="300">
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Altura (cm) *</label>
+                            <input type="number" id="height" required min="140" max="220">
+                        </div>
                     </div>
-                </section>
-                <section class="card" style="animation-delay: 0.2s;">
+                </div>
+
+                <div class="card">
                     <h2>Medidas de Circunferência (cm)</h2>
-                     <div class="grid-container">
-                        <div class="input-group"><label for="arm">Braço:</label><input type="number" step="0.1" id="arm"></div>
-                        <div class="input-group"><label for="forearm">Antebraço:</label><input type="number" step="0.1" id="forearm"></div>
-                        <div class="input-group"><label for="chest">Tórax:</label><input type="number" step="0.1" id="chest"></div>
-                        <div class="input-group"><label for="waist">Cintura:</label><input type="number" step="0.1" id="waist"></div>
-                        <div class="input-group"><label for="abdomen">Abdômen:</label><input type="number" step="0.1" id="abdomen"></div>
-                        <div class="input-group"><label for="hip">Quadril:</label><input type="number" step="0.1" id="hip"></div>
-                        <div class="input-group"><label for="thigh">Coxa:</label><input type="number" step="0.1" id="thigh"></div>
-                        <div class="input-group"><label for="leg">Perna:</label><input type="number" step="0.1" id="leg"></div>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="arm">Braço</label><input type="number" id="arm" step="0.1"></div>
+                        <div class="form-group"><label for="forearm">Antebraço</label><input type="number" id="forearm" step="0.1"></div>
+                        <div class="form-group"><label for="chest">Tórax</label><input type="number" id="chest" step="0.1"></div>
+                        <div class="form-group"><label for="waist">Cintura</label><input type="number" id="waist" step="0.1"></div>
+                        <div class="form-group"><label for="abdomen">Abdômen</label><input type="number" id="abdomen" step="0.1"></div>
+                        <div class="form-group"><label for="hip">Quadril</label><input type="number" id="hip" step="0.1"></div>
+                        <div class="form-group"><label for="thigh">Coxa</label><input type="number" id="thigh" step="0.1"></div>
+                        <div class="form-group"><label for="leg">Perna</label><input type="number" id="leg" step="0.1"></div>
                     </div>
-                </section>
-                <section class="card" style="animation-delay: 0.3s;">
-                    <h2>Dobras Cutâneas (mm) - Pollock 7</h2>
-                    <div class="grid-container">
-                        <div class="input-group"><label for="subscapular">Subescapular:</label><input type="number" step="0.1" id="subscapular" required min="1"></div>
-                        <div class="input-group"><label for="triceps">Tricipital:</label><input type="number" step="0.1" id="triceps" required min="1"></div>
-                        <div class="input-group"><label for="pectoral">Peitoral:</label><input type="number" step="0.1" id="pectoral" required min="1"></div>
-                        <div class="input-group"><label for="midaxillary">Axilar Média:</label><input type="number" step="0.1" id="midaxillary" required min="1"></div>
-                        <div class="input-group"><label for="suprailiac">Supra-ilíaca:</label><input type="number" step="0.1" id="suprailiac" required min="1"></div>
-                        <div class="input-group"><label for="abdominalSkinfold">Abdominal:</label><input type="number" step="0.1" id="abdominalSkinfold" required min="1"></div>
-                        <div class="input-group"><label for="thighSkinfold">Coxa:</label><input type="number" step="0.1" id="thighSkinfold" required min="1"></div>
+                </div>
+
+                <div class="card">
+                    <h2>Dobras Cutâneas (mm) - Pollock 7 *</h2>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="subscapular">Subescapular</label><input type="number" id="subscapular" step="0.1" min="0"></div>
+                        <div class="form-group"><label for="triceps">Tricipital</label><input type="number" id="triceps" step="0.1" min="0"></div>
+                        <div class="form-group"><label for="pectoral">Peitoral</label><input type="number" id="pectoral" step="0.1" min="0"></div>
+                        <div class="form-group"><label for="midaxillary">Axilar Média</label><input type="number" id="midaxillary" step="0.1" min="0"></div>
+                        <div class="form-group"><label for="suprailiac">Supra-ilíaca</label><input type="number" id="suprailiac" step="0.1" min="0"></div>
+                        <div class="form-group"><label for="abdominalSkinfold">Abdominal</label><input type="number" id="abdominalSkinfold" step="0.1" min="0"></div>
+                        <div class="form-group"><label for="thighSkinfold">Coxa</label><input type="number" id="thighSkinfold" step="0.1" min="0"></div>
                     </div>
-                </section>
-                <div class="form-actions"><button type="button" id="btnBackToMenu" class="btn btn-secondary">Voltar</button><button type="button" id="btnSaveDraft" class="btn btn-secondary">Salvar Rascunho</button><button type="submit" class="btn btn-primary">Calcular e Salvar</button></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="btnBackForm">Voltar</button>
+                    <button type="button" class="btn btn-secondary" id="btnDraftForm">Rascunho</button>
+                    <button type="submit" class="btn btn-primary">Calcular</button>
+                </div>
             </form>
         </main>
-        
-        <!-- TELA DE RESULTADOS - HTML COMPLETO -->
-        <section id="results" class="card hidden">
-            <h2>Resultados da Avaliação de <span id="result-name"></span></h2>
-            <div id="results-content"></div>
-            <div id="final-grade-container" style="text-align: center; margin-top: 2.5rem;">
-                <h3>Nota Final</h3>
-                <span id="final-grade"></span>
-                <span id="grade-classification" style="display: block; font-size: 1.3rem; font-weight: 500; margin-top: 0.5rem;"></span>
+
+        <main id="screenResults" class="hidden">
+            <div class="card">
+                <h2>Resultados - <span id="resultName"></span></h2>
+                
+                <div id="alertContainer"></div>
+                
+                <div class="results-grid" id="resultsGrid"></div>
+
+                <div class="final-grade">
+                    <div class="final-grade-value" id="finalGradeValue"></div>
+                    <div style="font-size: 1.3rem; font-weight: 500; margin-top: var(--space-md);" id="finalGradeText"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: var(--space-lg);">
+                    <button class="btn btn-secondary" id="btnBackResults">Voltar ao Menu</button>
+                </div>
             </div>
-            <div style="text-align: center; margin-top: 2rem;"><button id="btnCloseResults" class="btn btn-secondary">Fechar</button></div>
-        </section>
+        </main>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- SELEÇÃO DE ELEMENTOS DO DOM ---
-            const body = document.body;
-            const mainMenu = document.getElementById('mainMenu');
-            const evaluationScreen = document.getElementById('evaluationScreen');
-            const resultsScreen = document.getElementById('results');
-            const form = document.getElementById('evaluationForm');
-            const historyList = document.getElementById('historyList');
-            const emptyHistoryMessage = document.getElementById('emptyHistoryMessage');
-            const btnNewEvaluation = document.getElementById('btnNewEvaluation');
-            const btnBackToMenu = document.getElementById('btnBackToMenu');
-            const btnSaveDraft = document.getElementById('btnSaveDraft');
-            const btnCloseResults = document.getElementById('btnCloseResults');
-            const openSettingsBtn = document.getElementById('openSettingsBtn');
-            const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-            const settingsPanel = document.getElementById('settingsPanel');
-            const overlay = document.getElementById('overlay');
-            const themeToggle = document.getElementById('themeToggle');
-            const themeLabel = document.getElementById('themeLabel');
-            const profileNameInput = document.getElementById('profileName');
-            const saveProfileBtn = document.getElementById('saveProfileBtn');
-            const welcomeMessage = document.getElementById('welcomeMessage');
-            const exportDataBtn = document.getElementById('exportDataBtn');
-            const importDataBtn = document.getElementById('importDataBtn');
-            const importFileInput = document.getElementById('importFileInput');
-            const clearDataBtn = document.getElementById('clearDataBtn');
+        // ============================================
+        // SISTEMA PROFISSIONAL DE AVALIAÇÃO FÍSICA
+        // Baseado em padrões OMS, ACSM e SBEM
+        // ============================================
 
-            // --- CHAVES DO LOCALSTORAGE ---
-            const HISTORY_KEY = 'elsonAvaliaHistory_v4';
-            const THEME_KEY = 'elsonAvaliaTheme';
-            const PROFILE_KEY = 'elsonAvaliaProfile';
+        /**
+         * Módulo de Cálculos Corporais Avançados
+         * Segue as diretrizes científicas internacionais para avaliação física
+         */
+        const BodyMetrics = {
+            // Faixas de IMC conforme OMS
+            IMC_RANGES: {
+                MAGREZA_GRAVE: { min: 0, max: 16.9, label: 'Magreza Grave', risco: 'CRÍTICO' },
+                MAGREZA_MODERADA: { min: 17, max: 18.4, label: 'Magreza Moderada', risco: 'ALTO' },
+                SAUDÁVEL: { min: 18.5, max: 24.9, label: 'Saudável', risco: 'NORMAL' },
+                SOBREPESO: { min: 25, max: 29.9, label: 'Sobrepeso', risco: 'MODERADO' },
+                OBESIDADE_I: { min: 30, max: 34.9, label: 'Obesidade Grau I', risco: 'ALTO' },
+                OBESIDADE_II: { min: 35, max: 39.9, label: 'Obesidade Grau II', risco: 'MUITO_ALTO' },
+                OBESIDADE_III: { min: 40, max: 999, label: 'Obesidade Grau III', risco: 'CRÍTICO' }
+            },
 
-            // --- FUNÇÕES DE OTIMIZAÇÃO ---
-            function debounce(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                };
-            }
-
-            // Preload de recursos críticos
-            function preloadCriticalResources() {
-                const link = document.createElement('link');
-                link.rel = 'preload';
-                link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
-                link.as = 'style';
-                document.head.appendChild(link);
-            }
-
-            // Cleanup para evitar vazamentos de memória
-            function cleanupEventListeners() {
-                window.removeEventListener('beforeunload', cleanupEventListeners);
-            }
-
-            // --- FUNÇÕES DE NAVEGAÇÃO ---
-            const showScreen = (screenName) => {
-                requestAnimationFrame(() => {
-                    mainMenu.classList.add('hidden');
-                    evaluationScreen.classList.add('hidden');
-                    resultsScreen.classList.add('hidden');
-                    document.getElementById(screenName).classList.remove('hidden');
-                    window.scrollTo(0, 0);
-                });
-            };
-
-            const toggleSettingsPanel = (show) => {
-                requestAnimationFrame(() => {
-                    settingsPanel.classList.toggle('active', show);
-                    overlay.classList.toggle('active', show);
-                });
-            };
-
-            // --- FUNÇÕES DE TEMA E PERFIL ---
-            const applyTheme = (theme) => {
-                requestAnimationFrame(() => {
-                    body.dataset.theme = theme;
-                    themeToggle.checked = theme === 'dark';
-                    themeLabel.textContent = theme === 'dark' ? 'Tema Escuro' : 'Tema Claro';
-                    localStorage.setItem(THEME_KEY, theme);
-                });
-            };
-
-            const loadProfile = () => {
-                const profileName = localStorage.getItem(PROFILE_KEY) || '';
-                profileNameInput.value = profileName;
-                welcomeMessage.textContent = profileName ? `Bem-vindo, ${profileName}.` : 'A nova era das avaliações físicas.';
-            };
-            
-            // --- FUNÇÕES DE GERENCIAMENTO DE DADOS ---
-            const getHistory = () => JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-            const saveHistory = (history) => localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-            
-            const renderHistory = debounce(() => {
-                requestAnimationFrame(() => {
-                    const history = getHistory();
-                    historyList.innerHTML = '';
-                    emptyHistoryMessage.classList.toggle('hidden', history.length > 0);
-                    history.sort((a, b) => b.id - a.id);
-                    history.forEach(eval => {
-                        const date = new Date(eval.id).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                        const item = document.createElement('div');
-                        item.className = 'history-item';
-                        item.innerHTML = `
-                            <div>
-                                <strong style="color: var(--text-primary-color);">${eval.data.name || 'Aluno sem nome'}</strong>
-                                <span style="font-size: 0.85rem; color: var(--text-secondary-color); display: block;">${date}</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 1rem;">
-                               <span style="padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: white; background-color: var(--${eval.status === 'complete' ? 'success' : 'draft'}-color);">
-                                   ${eval.status === 'complete' ? 'Completa' : 'Rascunho'}
-                               </span>
-                               <div class="history-actions" style="display: flex; gap: 0.8rem;">
-                                   <button class="btn btn-secondary" data-action="load" data-id="${eval.id}" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Ver/Editar</button>
-                                   <button class="btn" data-action="delete" data-id="${eval.id}" style="background-color: var(--danger-color); color: white; font-size: 0.8rem; padding: 0.4rem 0.8rem;">Excluir</button>
-                               </div>
-                            </div>`;
-                        historyList.appendChild(item);
-                    });
-                });
-            }, 16);
-            
-            // --- FUNÇÕES DE FORMULÁRIO E CÁLCULO ---
-            const clearForm = () => { form.reset(); form.dataset.evaluationId = ''; };
-            const getFormData = () => { const data = {}; form.querySelectorAll('input, select').forEach(input => data[input.id] = input.value); return data; };
-            const setFormData = (data) => { form.querySelectorAll('input, select').forEach(input => { if (data[input.id]) input.value = data[input.id]; }); };
-            
-            const saveEvaluation = (status) => {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        const data = getFormData();
-                        if (!data.name && status === 'draft') { 
-                            alert("Insira o nome do aluno para salvar um rascunho."); 
-                            resolve(false); 
-                            return; 
-                        }
-                        let history = getHistory();
-                        let evalId = form.dataset.evaluationId || Date.now();
-                        history = history.filter(e => e.id != evalId);
-                        history.push({ id: evalId, status, data });
-                        saveHistory(history);
-                        renderHistory();
-                        resolve(true);
-                    }, 0);
-                });
-            };
-
-            const calculateResults = (data) => {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        const age = parseInt(data.age), gender = data.gender, weight = parseFloat(data.weight), height = parseInt(data.height);
-                        const skinfolds = ['subscapular', 'triceps', 'pectoral', 'midaxillary', 'suprailiac', 'abdominalSkinfold', 'thighSkinfold'].map(id => parseFloat(data[id]));
-                        const sumOfSkinfolds = skinfolds.reduce((a, b) => a + b, 0);
-                        const heightInMeters = height / 100;
-                        const bmi = weight / (heightInMeters * heightInMeters);
-                        let bodyDensity;
-                        if (gender === 'male') { bodyDensity = 1.112 - (0.00043499 * sumOfSkinfolds) + (0.00000055 * Math.pow(sumOfSkinfolds, 2)) - (0.00028826 * age); } else { bodyDensity = 1.097 - (0.00046971 * sumOfSkinfolds) + (0.00000056 * Math.pow(sumOfSkinfolds, 2)) - (0.00012828 * age); }
-                        const bodyFatPercentage = ((4.95 / bodyDensity) - 4.5) * 100;
-                        const fatMass = weight * (bodyFatPercentage / 100);
-                        const leanMass = weight - fatMass;
-                        let bmr = gender === 'male' ? 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age) : 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
-                        const idealWeightMin = 18.5 * Math.pow(heightInMeters, 2), idealWeightMax = 24.9 * Math.pow(heightInMeters, 2);
-                        let grade = 10.0;
-                        if (bmi < 18.5 || bmi >= 25) grade -= 2.5;
-                        if (bmi >= 30) grade -= 1.5;
-                        if (gender === 'male' ? bodyFatPercentage > 25 : bodyFatPercentage > 32) grade -= 3;
-                        else if (gender === 'male' ? bodyFatPercentage > 18 : bodyFatPercentage > 25) grade -= 1.5;
-                        if (grade < 0) grade = 0;
-                        resolve({ bmi, bodyFatPercentage, fatMass, leanMass, bmr, idealWeightMin, idealWeightMax, grade });
-                    }, 0);
-                });
-            };
-
-            const displayResults = (data, results) => {
-                requestAnimationFrame(() => {
-                    document.getElementById('result-name').textContent = data.name;
-                    let bmiClassification = 'Peso Normal';
-                    if (results.bmi < 18.5) bmiClassification = 'Abaixo do Peso';
-                    else if (results.bmi >= 25 && results.bmi < 30) bmiClassification = 'Sobrepeso';
-                    else if (results.bmi >= 30) bmiClassification = 'Obesidade';
-                    document.getElementById('results-content').innerHTML = `<p><strong>IMC:</strong> ${results.bmi.toFixed(2)} (${bmiClassification})</p><p><strong>% Gordura:</strong> ${results.bodyFatPercentage.toFixed(2)}%</p><p><strong>Massa Gorda:</strong> ${results.fatMass.toFixed(2)} kg</p><p><strong>Massa Magra:</strong> ${results.leanMass.toFixed(2)} kg</p><p><strong>TMB:</strong> ${results.bmr.toFixed(0)} kcal/dia</p><p><strong>Peso Ideal:</strong> ${results.idealWeightMin.toFixed(1)} kg - ${results.idealWeightMax.toFixed(1)} kg</p>`;
-                    let gradeClassification = '';
-                    if (results.grade >= 8.5) { gradeClassification = 'Excelente'; } else if (results.grade >= 7.0) { gradeClassification = 'Bom'; } else if (results.grade >= 5.0) { gradeClassification = 'Regular'; } else { gradeClassification = 'Precisa Melhorar'; }
-                    document.getElementById('final-grade').textContent = results.grade.toFixed(1);
-                    document.getElementById('grade-classification').textContent = gradeClassification;
-                    showScreen('results');
-                });
-            };
-
-            // --- EVENT LISTENERS ---
-            btnNewEvaluation.addEventListener('click', () => { clearForm(); showScreen('evaluationScreen'); });
-            btnBackToMenu.addEventListener('click', () => showScreen('mainMenu'));
-            btnCloseResults.addEventListener('click', () => showScreen('mainMenu'));
-            btnSaveDraft.addEventListener('click', async () => { 
-                if(await saveEvaluation('draft')) { 
-                    alert('Rascunho salvo!'); 
-                    showScreen('mainMenu'); 
-                } 
-            });
-            
-            form.addEventListener('submit', async (e) => { 
-                e.preventDefault(); 
-                const data = getFormData(); 
-                const results = await calculateResults(data); 
-                if (await saveEvaluation('complete')) 
-                    displayResults(data, results); 
-            });
-            
-            openSettingsBtn.addEventListener('click', () => toggleSettingsPanel(true));
-            closeSettingsBtn.addEventListener('click', () => toggleSettingsPanel(false));
-            overlay.addEventListener('click', () => toggleSettingsPanel(false));
-            
-            saveProfileBtn.addEventListener('click', () => { 
-                localStorage.setItem(PROFILE_KEY, profileNameInput.value); 
-                loadProfile(); 
-                saveProfileBtn.textContent = 'Salvo!'; 
-                setTimeout(() => { 
-                    saveProfileBtn.textContent = 'Salvar Perfil'; 
-                }, 2000); 
-            });
-            
-            themeToggle.addEventListener('change', () => applyTheme(themeToggle.checked ? 'dark' : 'light'));
-            
-            historyList.addEventListener('click', (e) => {
-                const button = e.target.closest('button');
-                if (!button) return;
-                const { action, id } = button.dataset;
-                let history = getHistory();
-                if (action === 'delete') { 
-                    if (confirm('Tem certeza?')) { 
-                        saveHistory(history.filter(eval => eval.id != id)); 
-                        renderHistory(); 
-                    } 
-                } 
-                else if (action === 'load') { 
-                    const evalToLoad = history.find(eval => eval.id == id); 
-                    if (evalToLoad) { 
-                        clearForm(); 
-                        setFormData(evalToLoad.data); 
-                        form.dataset.evaluationId = id; 
-                        showScreen('evaluationScreen'); 
-                    } 
+            // Faixas de % de Gordura Corporal por Sexo (ACSM)
+            FAT_RANGES: {
+                MALE: {
+                    EXCELLENT: { min: 0, max: 10, label: 'Excelente' },
+                    GOOD: { min: 11, max: 20, label: 'Bom' },
+                    ACCEPTABLE: { min: 21, max: 25, label: 'Aceitável' },
+                    POOR: { min: 26, max: 999, label: 'Inadequado' }
+                },
+                FEMALE: {
+                    EXCELLENT: { min: 0, max: 16, label: 'Excelente' },
+                    GOOD: { min: 17, max: 26, label: 'Bom' },
+                    ACCEPTABLE: { min: 27, max: 32, label: 'Aceitável' },
+                    POOR: { min: 33, max: 999, label: 'Inadequado' }
                 }
-            });
-            
-            exportDataBtn.addEventListener('click', () => { /* ... */ });
-            importDataBtn.addEventListener('click', () => importFileInput.click());
-            importFileInput.addEventListener('change', (event) => { /* ... */ });
-            clearDataBtn.addEventListener('click', () => { /* ... */ });
+            },
 
-            // --- INICIALIZAÇÃO DA APLICAÇÃO ---
-            const initializeApp = () => {
-                requestAnimationFrame(() => {
-                    applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
-                    loadProfile();
-                    renderHistory();
-                    showScreen('mainMenu');
-                    preloadCriticalResources();
-                    window.addEventListener('beforeunload', cleanupEventListeners);
+            /**
+             * Calcula IMC (Índice de Massa Corporal)
+             * Fórmula: peso (kg) / altura² (m)
+             */
+            calcularIMC(peso, altura) {
+                const alturaMetros = altura / 100;
+                return peso / (alturaMetros * alturaMetros);
+            },
+
+            /**
+             * Obtém classificação IMC conforme OMS
+             */
+            obterClassificacaoIMC(imc) {
+                for (const [chave, range] of Object.entries(this.IMC_RANGES)) {
+                    if (imc >= range.min && imc <= range.max) {
+                        return range;
+                    }
+                }
+                return this.IMC_RANGES.OBESIDADE_III;
+            },
+
+            /**
+             * Calcula densidade corporal usando método Pollock 7
+             * Fórmula específica por sexo
+             */
+            calcularDensidade(sumDobras, idade, sexo) {
+                const sumPowers = Math.pow(sumDobras, 2);
+                
+                if (sexo === 'male') {
+                    return 1.112 - (0.00043499 * sumDobras) + 
+                           (0.00000055 * sumPowers) - (0.00028826 * idade);
+                } else {
+                    return 1.097 - (0.00046971 * sumDobras) + 
+                           (0.00000056 * sumPowers) - (0.00012828 * idade);
+                }
+            },
+
+            /**
+             * Calcula percentual de gordura usando fórmula de Siri
+             * % Gordura = (495 / densidade) - 450
+             */
+            calcularPercentualGordura(densidade) {
+                return ((4.95 / densidade) - 4.5) * 100;
+            },
+
+            /**
+             * Obtém classificação de gordura conforme ACSM
+             */
+            obterClassificacaoGordura(percentualGordura, sexo) {
+                const ranges = this.FAT_RANGES[sexo === 'male' ? 'MALE' : 'FEMALE'];
+                
+                for (const range of Object.values(ranges)) {
+                    if (percentualGordura >= range.min && percentualGordura <= range.max) {
+                        return range;
+                    }
+                }
+                return ranges.POOR;
+            },
+
+            /**
+             * Calcula TMB (Taxa Metabólica Basal) - Equação de Mifflin-St Jeor
+             */
+            calcularTMB(peso, altura, idade, sexo) {
+                if (sexo === 'male') {
+                    return 10 * peso + 6.25 * altura - 5 * idade + 5;
+                } else {
+                    return 10 * peso + 6.25 * altura - 5 * idade - 161;
+                }
+            },
+
+            /**
+             * Detecta valores absurdos/perigosos
+             */
+            validarDados(peso, altura, idade, sexo) {
+                const alertas = [];
+                const imc = this.calcularIMC(peso, altura);
+                const razaoPeso = peso / (altura / 100);
+
+                // Valida altura vs peso (proporcionalidade mínima)
+                if (altura > 180 && peso < 55) {
+                    alertas.push({
+                        tipo: 'CRÍTICO',
+                        mensagem: `Atenção: Altura ${altura}cm com peso ${peso}kg indica magreza extrema. Recomenda-se consulta médica.`,
+                        score_penalty: 10 // Penalidade máxima
+                    });
+                }
+
+                if (altura < 150 && peso > 120) {
+                    alertas.push({
+                        tipo: 'CRÍTICO',
+                        mensagem: `Atenção: Altura ${altura}cm com peso ${peso}kg. Valores fora do padrão esperado.`,
+                        score_penalty: 10
+                    });
+                }
+
+                // IMC crítico
+                if (imc < 16.9 || imc > 40) {
+                    alertas.push({
+                        tipo: 'CRÍTICO',
+                        mensagem: `IMC ${imc.toFixed(1)} - Condição crítica. Consulte um profissional de saúde.`,
+                        score_penalty: 8
+                    });
+                }
+
+                return alertas;
+            }
+        };
+
+        /**
+         * Módulo de Sistema de Pontuação Profissional
+         */
+        const SistemaAvaliacao = {
+            /**
+             * Calcula score final baseado em múltiplos critérios científicos
+             * Pontuação máxima: 100 (excelente saúde geral)
+             */
+            calcularScore(dados, metricas) {
+                let score = 100;
+                const penalidades = [];
+
+                // CRITÉRIO 1: IMC (30% do peso)
+                const imc = metricas.imc;
+                const classIMC = BodyMetrics.obterClassificacaoIMC(imc);
+                
+                switch (classIMC.label) {
+                    case 'Saudável':
+                        penalidades.push({ criterio: 'IMC', detracao: 0, label: 'Saudável (Ótimo)' });
+                        break;
+                    case 'Magreza Moderada':
+                        penalidades.push({ criterio: 'IMC', detracao: 15, label: 'Magreza Moderada' });
+                        score -= 15;
+                        break;
+                    case 'Magreza Grave':
+                        penalidades.push({ criterio: 'IMC', detracao: 30, label: 'Magreza Grave' });
+                        score -= 30;
+                        break;
+                    case 'Sobrepeso':
+                        penalidades.push({ criterio: 'IMC', detracao: 10, label: 'Sobrepeso' });
+                        score -= 10;
+                        break;
+                    case 'Obesidade Grau I':
+                        penalidades.push({ criterio: 'IMC', detracao: 20, label: 'Obesidade Grau I' });
+                        score -= 20;
+                        break;
+                    default:
+                        penalidades.push({ criterio: 'IMC', detracao: 30, label: classIMC.label });
+                        score -= 30;
+                }
+
+                // CRITÉRIO 2: % de Gordura (40% do peso)
+                const classGordura = BodyMetrics.obterClassificacaoGordura(metricas.percentualGordura, dados.gender);
+                
+                if (classGordura.label === 'Excelente') {
+                    penalidades.push({ criterio: 'Gordura', detracao: 0, label: 'Excelente' });
+                } else if (classGordura.label === 'Bom') {
+                    penalidades.push({ criterio: 'Gordura', detracao: 8, label: 'Bom' });
+                    score -= 8;
+                } else if (classGordura.label === 'Aceitável') {
+                    penalidades.push({ criterio: 'Gordura', detracao: 15, label: 'Aceitável' });
+                    score -= 15;
+                } else {
+                    penalidades.push({ criterio: 'Gordura', detracao: 25, label: 'Inadequado' });
+                    score -= 25;
+                }
+
+                // CRITÉRIO 3: Validações de dados anormais (30% do peso)
+                const alertas = BodyMetrics.validarDados(
+                    parseFloat(dados.weight),
+                    parseInt(dados.height),
+                    parseInt(dados.age),
+                    dados.gender
+                );
+
+                if (alertas.length > 0) {
+                    const maxPenalty = Math.max(...alertas.map(a => a.score_penalty || 0));
+                    score -= maxPenalty;
+                    penalidades.push({ criterio: 'Validações', detracao: maxPenalty, label: 'Valores críticos detectados' });
+                }
+
+                // Garante que score nunca fica negativo
+                score = Math.max(0, score);
+
+                return { score, penalidades, alertas };
+            },
+
+            /**
+             * Classifica o score final em faixas profissionais
+             */
+            classificarScore(score) {
+                if (score >= 90) return { label: 'Excelente', cor: '#38a169' };
+                if (score >= 75) return { label: 'Muito Bom', cor: '#00F260' };
+                if (score >= 60) return { label: 'Bom', cor: '#3182ce' };
+                if (score >= 45) return { label: 'Regular', cor: '#ed8936' };
+                if (score >= 30) return { label: 'Ruim', cor: '#e53e3e' };
+                return { label: 'Crítico', cor: '#c53030' };
+            }
+        };
+
+        /**
+         * Aplicação Principal
+         */
+        const APP = {
+            data: {
+                history: [],
+                profile: '',
+                theme: 'dark'
+            },
+            els: {},
+
+            init() {
+                this.cacheElements();
+                this.loadData();
+                this.setupEvents();
+                this.applyTheme(this.data.theme);
+                this.renderHistory();
+                this.updateWelcome();
+                this.showScreen('screenMenu');
+            },
+
+            cacheElements() {
+                this.els = {
+                    btnSettings: document.getElementById('btnSettings'),
+                    btnCloseSettings: document.getElementById('btnCloseSettings'),
+                    settingsPanel: document.getElementById('settingsPanel'),
+                    settingsOverlay: document.getElementById('settingsOverlay'),
+                    profileName: document.getElementById('profileName'),
+                    btnSaveProfile: document.getElementById('btnSaveProfile'),
+                    themeToggle: document.getElementById('themeToggle'),
+                    btnClear: document.getElementById('btnClear'),
+                    
+                    screenMenu: document.getElementById('screenMenu'),
+                    welcomeText: document.getElementById('welcomeText'),
+                    btnNewEval: document.getElementById('btnNewEval'),
+                    historyList: document.getElementById('historyList'),
+                    emptyHistory: document.getElementById('emptyHistory'),
+                    
+                    screenForm: document.getElementById('screenForm'),
+                    evalForm: document.getElementById('evalForm'),
+                    btnBackForm: document.getElementById('btnBackForm'),
+                    btnDraftForm: document.getElementById('btnDraftForm'),
+                    
+                    screenResults: document.getElementById('screenResults'),
+                    resultName: document.getElementById('resultName'),
+                    alertContainer: document.getElementById('alertContainer'),
+                    resultsGrid: document.getElementById('resultsGrid'),
+                    finalGradeValue: document.getElementById('finalGradeValue'),
+                    finalGradeText: document.getElementById('finalGradeText'),
+                    btnBackResults: document.getElementById('btnBackResults'),
+                };
+            },
+
+            loadData() {
+                this.data.history = JSON.parse(localStorage.getItem('history')) || [];
+                this.data.profile = localStorage.getItem('profile') || '';
+                this.data.theme = localStorage.getItem('theme') || 'dark';
+            },
+
+            saveData() {
+                localStorage.setItem('history', JSON.stringify(this.data.history));
+                localStorage.setItem('profile', this.data.profile);
+                localStorage.setItem('theme', this.data.theme);
+            },
+
+            setupEvents() {
+                this.els.btnSettings.addEventListener('click', () => this.toggleSettings(true));
+                this.els.btnCloseSettings.addEventListener('click', () => this.toggleSettings(false));
+                this.els.settingsOverlay.addEventListener('click', () => this.toggleSettings(false));
+                this.els.btnSaveProfile.addEventListener('click', () => this.saveProfile());
+                this.els.themeToggle.addEventListener('change', () => this.toggleTheme());
+                this.els.btnClear.addEventListener('click', () => this.clearData());
+                
+                this.els.btnNewEval.addEventListener('click', () => this.showScreen('screenForm'));
+                this.els.historyList.addEventListener('click', (e) => this.handleHistoryAction(e));
+                
+                this.els.evalForm.addEventListener('submit', (e) => this.submitForm(e));
+                this.els.btnBackForm.addEventListener('click', () => this.showScreen('screenMenu'));
+                this.els.btnDraftForm.addEventListener('click', () => this.saveDraft());
+                
+                this.els.btnBackResults.addEventListener('click', () => this.showScreen('screenMenu'));
+                
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') this.toggleSettings(false);
                 });
-            };
-            
-            initializeApp();
+            },
+
+            toggleSettings(show) {
+                this.els.settingsPanel.classList.toggle('active', show);
+                this.els.settingsOverlay.classList.toggle('active', show);
+                document.body.style.overflow = show ? 'hidden' : '';
+            },
+
+            saveProfile() {
+                this.data.profile = this.els.profileName.value;
+                this.saveData();
+                this.updateWelcome();
+                
+                const btn = this.els.btnSaveProfile;
+                const txt = btn.textContent;
+                btn.textContent = '✓ Salvo!';
+                setTimeout(() => btn.textContent = txt, 2000);
+            },
+
+            updateWelcome() {
+                this.els.welcomeText.textContent = this.data.profile 
+                    ? `Bem-vindo, ${this.data.profile}.` 
+                    : 'A nova era das avaliações físicas.';
+                this.els.profileName.value = this.data.profile;
+            },
+
+            toggleTheme() {
+                this.data.theme = this.data.theme === 'dark' ? 'light' : 'dark';
+                this.applyTheme(this.data.theme);
+                this.saveData();
+            },
+
+            applyTheme(theme) {
+                document.body.dataset.theme = theme;
+                this.els.themeToggle.checked = theme === 'dark';
+            },
+
+            clearData() {
+                if (confirm('Tem certeza? Esta ação não pode ser desfeita!')) {
+                    this.data.history = [];
+                    this.saveData();
+                    this.renderHistory();
+                    alert('Histórico limpo!');
+                    this.toggleSettings(false);
+                }
+            },
+
+            renderHistory() {
+                const sorted = [...this.data.history].sort((a, b) => b.id - a.id);
+                this.els.historyList.innerHTML = '';
+                this.els.emptyHistory.classList.toggle('hidden', sorted.length > 0);
+
+                sorted.forEach(item => {
+                    const date = new Date(parseInt(item.id)).toLocaleString('pt-BR');
+                    const statusClass = item.status === 'complete' ? 'complete' : '';
+                    const statusText = item.status === 'complete' ? 'Completa' : 'Rascunho';
+                    const statusColor = item.status === 'complete' ? 'var(--color-success)' : 'var(--color-warning)';
+
+                    const div = document.createElement('div');
+                    div.className = 'history-item';
+                    div.innerHTML = `
+                        <div class="history-item-info">
+                            <h3>${item.data.name || 'Sem nome'}</h3>
+                            <p>${date}</p>
+                        </div>
+                        <div class="history-item-actions">
+                            <span class="status-badge" style="background-color: ${statusColor};">${statusText}</span>
+                            <button class="btn btn-secondary" data-action="load" data-id="${item.id}" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">Ver</button>
+                            <button class="btn btn-secondary" data-action="delete" data-id="${item.id}" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; background-color: var(--color-danger); color: white;">Del</button>
+                        </div>
+                    `;
+                    this.els.historyList.appendChild(div);
+                });
+            },
+
+            handleHistoryAction(e) {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                const { action, id } = btn.dataset;
+
+                if (action === 'delete') {
+                    if (confirm('Confirmar exclusão?')) {
+                        this.data.history = this.data.history.filter(h => h.id != id);
+                        this.saveData();
+                        this.renderHistory();
+                    }
+                } else if (action === 'load') {
+                    const item = this.data.history.find(h => h.id == id);
+                    if (item) {
+                        this.loadFormData(item.data);
+                        this.els.evalForm.dataset.id = item.id;
+                        this.showScreen('screenForm');
+                    }
+                }
+            },
+
+            /**
+             * CORRIGIDO: Carregamento seguro de dados
+             * Garante que todos os campos sejam preenchidos corretamente
+             */
+            loadFormData(data) {
+                // Primeiro: limpar formulário
+                this.clearForm();
+                
+                // Depois: preencher cada campo
+                Object.entries(data).forEach(([key, value]) => {
+                    const elemento = this.els.evalForm.elements[key];
+                    if (elemento) {
+                        elemento.value = String(value || '');
+                    }
+                });
+
+                // Log para debug (remover em produção)
+                console.log('✅ Dados carregados:', data);
+            },
+
+            getFormData() {
+                const data = {};
+                this.els.evalForm.querySelectorAll('input, select').forEach(el => {
+                    data[el.id] = el.value;
+                });
+                return data;
+            },
+
+            clearForm() {
+                this.els.evalForm.reset();
+                this.els.evalForm.dataset.id = '';
+            },
+
+            saveDraft() {
+                const data = this.getFormData();
+                if (!data.name) {
+                    alert('Insira o nome do aluno');
+                    return;
+                }
+                this.saveToHistory(data, 'draft');
+                alert('Rascunho salvo!');
+                this.showScreen('screenMenu');
+            },
+
+            submitForm(e) {
+                e.preventDefault();
+                const data = this.getFormData();
+                
+                // Validações básicas
+                if (!data.name || !data.age || !data.gender || !data.weight || !data.height) {
+                    alert('Preencha todos os dados obrigatórios (marcados com *)');
+                    return;
+                }
+
+                // Validação de dobras cutâneas (mínimo 4 valores)
+                const dobras = [
+                    parseFloat(data.subscapular),
+                    parseFloat(data.triceps),
+                    parseFloat(data.pectoral),
+                    parseFloat(data.midaxillary)
+                ].filter(d => d > 0);
+
+                if (dobras.length < 4) {
+                    alert('Preencha no mínimo os 4 primeiros valores de dobras cutâneas');
+                    return;
+                }
+
+                const results = this.calculateResults(data);
+                this.saveToHistory(data, 'complete');
+                this.displayResults(data, results);
+            },
+
+            saveToHistory(data, status) {
+                const id = this.els.evalForm.dataset.id || Date.now().toString();
+                this.data.history = this.data.history.filter(h => h.id != id);
+                this.data.history.push({ id, status, data });
+                this.saveData();
+                this.renderHistory();
+            },
+
+            /**
+             * NOVO: Cálculo profissional e robusto
+             */
+            calculateResults(data) {
+                const age = parseInt(data.age);
+                const gender = data.gender;
+                const weight = parseFloat(data.weight);
+                const height = parseInt(data.height);
+
+                // Coleta dobras cutâneas
+                const skins = [
+                    parseFloat(data.subscapular) || 0,
+                    parseFloat(data.triceps) || 0,
+                    parseFloat(data.pectoral) || 0,
+                    parseFloat(data.midaxillary) || 0,
+                    parseFloat(data.suprailiac) || 0,
+                    parseFloat(data.abdominalSkinfold) || 0,
+                    parseFloat(data.thighSkinfold) || 0
+                ];
+
+                const sumDobras = skins.reduce((a, b) => a + b, 0);
+
+                // Cálculos usando módulo BodyMetrics
+                const imc = BodyMetrics.calcularIMC(weight, height);
+                const densidade = BodyMetrics.calcularDensidade(sumDobras, age, gender);
+                const percentualGordura = BodyMetrics.calcularPercentualGordura(densidade);
+                const massaGorda = weight * (percentualGordura / 100);
+                const massaMagra = weight - massaGorda;
+                const tmb = BodyMetrics.calcularTMB(weight, height, age, gender);
+
+                const alturaMetros = height / 100;
+                const pesoIdealMin = 18.5 * (alturaMetros * alturaMetros);
+                const pesoIdealMax = 24.9 * (alturaMetros * alturaMetros);
+
+                // Cálculo de score usando SistemaAvaliacao
+                const { score, penalidades, alertas } = SistemaAvaliacao.calcularScore(data, {
+                    imc,
+                    percentualGordura
+                });
+
+                const classificacao = SistemaAvaliacao.classificarScore(score);
+
+                return {
+                    imc,
+                    percentualGordura,
+                    massaGorda,
+                    massaMagra,
+                    tmb,
+                    pesoIdealMin,
+                    pesoIdealMax,
+                    score,
+                    classificacao,
+                    penalidades,
+                    alertas,
+                    classIMC: BodyMetrics.obterClassificacaoIMC(imc),
+                    classGordura: BodyMetrics.obterClassificacaoGordura(percentualGordura, gender)
+                };
+            },
+
+            displayResults(data, r) {
+                this.els.resultName.textContent = data.name;
+                
+                // Mostrar alertas se houver
+                this.els.alertContainer.innerHTML = '';
+                if (r.alertas.length > 0) {
+                    r.alertas.forEach(alerta => {
+                        const div = document.createElement('div');
+                        div.className = `alert alert-${alerta.tipo === 'CRÍTICO' ? 'danger' : 'warning'}`;
+                        div.textContent = alerta.mensagem;
+                        this.els.alertContainer.appendChild(div);
+                    });
+                }
+
+                // Grade de resultados
+                this.els.resultsGrid.innerHTML = `
+                    <div class="result-item">
+                        <strong>IMC</strong>
+                        <span>${r.imc.toFixed(2)}</span>
+                        <div style="font-size: 0.85rem; color: var(--color-text-secondary); margin-top: var(--space-xs);">${r.classIMC.label}</div>
+                    </div>
+                    <div class="result-item">
+                        <strong>% Gordura</strong>
+                        <span>${r.percentualGordura.toFixed(2)}%</span>
+                        <div style="font-size: 0.85rem; color: var(--color-text-secondary); margin-top: var(--space-xs);">${r.classGordura.label}</div>
+                    </div>
+                    <div class="result-item">
+                        <strong>Massa Gorda</strong>
+                        <span>${r.massaGorda.toFixed(2)} kg</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>Massa Magra</strong>
+                        <span>${r.massaMagra.toFixed(2)} kg</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>TMB</strong>
+                        <span>${r.tmb.toFixed(0)} kcal/dia</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>Peso Ideal</strong>
+                        <span>${r.pesoIdealMin.toFixed(1)} - ${r.pesoIdealMax.toFixed(1)} kg</span>
+                    </div>
+                `;
+
+                this.els.finalGradeValue.textContent = r.score.toFixed(0);
+                this.els.finalGradeText.innerHTML = `
+                    <div>${r.classificacao.label}</div>
+                    <div style="font-size: 0.9rem; color: var(--color-text-secondary); margin-top: var(--space-sm);">
+                        ${r.penalidades.map(p => `${p.criterio}: -${p.detracao} pts`).join(' | ')}
+                    </div>
+                `;
+
+                this.showScreen('screenResults');
+            },
+
+            showScreen(name) {
+                document.querySelectorAll('main').forEach(el => el.classList.add('hidden'));
+                document.getElementById(name).classList.remove('hidden');
+                window.scrollTo(0, 0);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            APP.init();
         });
     </script>
 </body>
