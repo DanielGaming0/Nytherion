@@ -1,27 +1,592 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Server Nytherion</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElsonAvalia - Sistema de Avaliação Física</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Tema Padrão (Dark) */
+            --accent-gradient: linear-gradient(90deg, #00F260, #0575E6);
+            --bg-image: linear-gradient(315deg, #243B55, #141E30);
+            --card-bg-color: rgba(255, 255, 255, 0.05);
+            --card-border-color: rgba(255, 255, 255, 0.1);
+            --text-primary-color: #ffffff;
+            --text-secondary-color: #a0aec0;
+            --input-bg-color: rgba(0, 0, 0, 0.2);
+            --input-border-color: rgba(255, 255, 255, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --danger-color: #e53e3e;
+            --success-color: #38a169;
+            --draft-color: #718096;
+        }
+
+        [data-theme='light'] {
+            --accent-gradient: linear-gradient(90deg, #00c66c, #0072ff);
+            --bg-image: linear-gradient(315deg, #e2e8f0, #f8fafc);
+            --card-bg-color: rgba(255, 255, 255, 0.7);
+            --card-border-color: rgba(0, 0, 0, 0.08);
+            --text-primary-color: #1a202c;
+            --text-secondary-color: #4a5568;
+            --input-bg-color: rgba(0, 0, 0, 0.04);
+            --input-border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-primary-color);
+            background-image: var(--bg-image);
+            background-attachment: fixed;
+            background-size: cover;
+            transition: background-image 0.5s ease, color 0.5s ease;
+            overflow-x: hidden;
+        }
+        
+        /* --- LAYOUT E CABEÇALHO --- */
+        .top-bar { 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            padding: 1rem 2rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: var(--card-bg-color); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            border-bottom: 1px solid var(--card-border-color); 
+            transform: translateZ(0); 
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-primary-color); }
+
+        .container { max-width: 900px; margin: 1rem auto; padding: 1rem; }
+        header { text-align: center; margin-bottom: 3rem; animation: fadeInDown 1s ease-out; }
+        header h1 { font-size: 3.5rem; font-weight: 700; letter-spacing: 1px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        header p { color: var(--text-secondary-color); font-size: 1.1rem; margin-top: 0.5rem; }
+        #welcomeMessage { color: var(--text-secondary-color); font-size: 1.2rem; margin-bottom: 1rem; }
+
+        /* --- CARD DE VIDRO --- */
+        .card { 
+            background: var(--card-bg-color); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            border: 1px solid var(--card-border-color); 
+            border-radius: 20px; 
+            padding: 2.5rem; 
+            margin-bottom: 2rem; 
+            box-shadow: 0 8px 32px 0 var(--shadow-color); 
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            animation: fadeInUp 0.5s ease-out forwards; 
+            opacity: 0; 
+            will-change: transform;
+            contain: layout style paint;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        
+        @media (prefers-reduced-motion: no-preference) {
+            .card:hover { transform: translateY(-8px); }
+        }
+
+        .card h2 { font-size: 1.6rem; color: var(--text-primary-color); margin-bottom: 2rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--card-border-color); font-weight: 600; }
+        
+        /* --- BOTÕES E FORMULÁRIOS --- */
+        .btn { 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 0.75rem; 
+            padding: 0.8rem 1.5rem; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            text-align: center; 
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        
+        @media (prefers-reduced-motion: no-preference) {
+            .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
+            .btn:active { transform: translateY(-1px) scale(0.98); }
+        }
+
+        .btn-primary { background: var(--accent-gradient); color: white; width: 100%; padding: 1rem; font-size: 1.1rem; }
+        .btn-secondary { background-color: var(--input-bg-color); color: var(--text-primary-color); border: 1px solid var(--input-border-color); }
+        .btn-secondary:hover { background-color: rgba(255, 255, 255, 0.15); }
+        [data-theme='light'] .btn-secondary:hover { background-color: rgba(0, 0, 0, 0.08); }
+        
+        .input-group { margin-bottom: 1.2rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: var(--text-secondary-color); }
+        .input-group input, .input-group select { width: 100%; padding: 1rem; background: var(--input-bg-color); border: 1px solid var(--input-border-color); border-radius: 12px; font-size: 1rem; color: var(--text-primary-color); font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
+        .input-group select option { background-color: #2d3748; }
+        [data-theme='light'] .input-group select option { background-color: #fff; }
+        .input-group input:focus, .input-group select:focus { outline: none; border-color: #0575E6; box-shadow: 0 0 0 3px rgba(5, 117, 230, 0.3); }
+
+        /* --- MENU DE CONFIGURAÇÕES --- */
+        .settings-btn { background: transparent; border: none; cursor: pointer; color: var(--text-primary-color); }
+        .settings-btn svg { width: 30px; height: 30px; stroke: var(--text-primary-color); }
+        .settings-panel { 
+            position: fixed; 
+            top: 0; 
+            right: -350px; 
+            width: 320px; 
+            height: 100%; 
+            background: var(--card-bg-color); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border-left: 1px solid var(--card-border-color); 
+            box-shadow: -10px 0 30px rgba(0,0,0,0.2); 
+            z-index: 200; 
+            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            padding: 1.5rem; 
+            display: flex; 
+            flex-direction: column; 
+            transform: translateZ(0);
+        }
+        .settings-panel.active { right: 0; }
+        .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .settings-header h2 { font-size: 1.5rem; color: var(--text-primary-color); }
+        .settings-section { margin-bottom: 2rem; }
+        .settings-section h3 { margin-bottom: 1rem; color: var(--text-secondary-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Theme Toggle Switch */
+        .theme-switch-wrapper { display: flex; align-items: center; justify-content: space-between; }
+        .theme-switch { display: inline-block; height: 34px; position: relative; width: 60px; }
+        .theme-switch input { display:none; }
+        .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; }
+        .slider:before { background-color: #fff; bottom: 4px; content: ""; height: 26px; left: 4px; position: absolute; transition: .4s; width: 26px; }
+        input:checked + .slider { background-image: var(--accent-gradient); }
+        input:checked + .slider:before { transform: translateX(26px); }
+        .slider.round { border-radius: 34px; }
+        .slider.round:before { border-radius: 50%; }
+
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+        .overlay.active { opacity: 1; pointer-events: all; }
+
+        /* --- OUTROS ESTILOS --- */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+        .form-actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+        .history-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 1.2rem 1.5rem; 
+            background: var(--input-bg-color); 
+            border-radius: 12px; 
+            border-left: 4px solid transparent; 
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        
+        @media (prefers-reduced-motion: no-preference) {
+            .history-item:hover { transform: translateX(10px); border-left: 4px solid #00F260; }
+        }
+
+        #final-grade { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 5rem; font-weight: 700; }
+        .hidden { display: none !important; }
+        
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Para usuários que preferem reduzir movimento */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Otimização para dispositivos touch */
+        @media (hover: none) and (pointer: coarse) {
+            .card:hover, .history-item:hover {
+                transform: none;
+            }
+        }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <h1 class="title">🌑 Server <span>Nytherion</span> Lançada!</h1>
+<body data-theme="dark">
 
-    <div class="ip-box">
-      <h2>🌍 IP JAVA:</h2>
-      <p>jogar.nyxferion.shop</p>
-
-      <h2>📱 IP BEDROCK:</h2>
-      <p>jogar.nyxferion.shop</p>
-
-      <h2>📌 PORTA BEDROCK:</h2>
-      <p>26163</p>
+    <div class="top-bar">
+        <span class="logo">ElsonAvalia</span>
+        <button class="settings-btn" id="openSettingsBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+        </button>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <aside class="settings-panel" id="settingsPanel">
+        <div class="settings-header"><h2>Configurações</h2><button class="settings-btn" id="closeSettingsBtn" style="font-size: 2rem; line-height: 1;">&times;</button></div>
+        <div class="settings-section">
+            <h3>Perfil</h3>
+            <div class="input-group"><label for="profileName">Seu Nome</label><input type="text" id="profileName" placeholder="Ex: Prof. Elson"></div>
+            <button class="btn btn-secondary" id="saveProfileBtn" style="width: 100%;">Salvar Perfil</button>
+        </div>
+        <div class="settings-section">
+            <h3>Design</h3>
+            <div class="theme-switch-wrapper"><span id="themeLabel">Tema Escuro</span><label class="theme-switch"><input type="checkbox" id="themeToggle"><span class="slider round"></span></label></div>
+        </div>
+        <div class="settings-section">
+            <h3>Gerenciar Dados</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <button class="btn btn-secondary" id="exportDataBtn">Exportar Backup</button>
+                <button class="btn btn-secondary" id="importDataBtn">Importar Backup</button>
+                <input type="file" id="importFileInput" class="hidden" accept=".json">
+                <button class="btn" id="clearDataBtn" style="background-color: var(--danger-color); color: white;">Limpar Histórico</button>
+            </div>
+        </div>
+    </aside>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="container">
+        <!-- TELA PRINCIPAL (MENU) -->
+        <main id="mainMenu">
+            <header>
+                <h1>ElsonAvalia</h1>
+                <p id="welcomeMessage">A nova era das avaliações físicas.</p>
+            </header>
+            <section class="menu-actions card"><button id="btnNewEvaluation" class="btn btn-primary">Iniciar Nova Avaliação</button></section>
+            <section class="card" id="historySection"><h2>Histórico de Avaliações</h2><div id="historyList"></div><p id="emptyHistoryMessage" class="hidden">Nenhuma avaliação encontrada.</p></section>
+        </main>
+        
+        <!-- TELA DE AVALIAÇÃO (FORMULÁRIO) - HTML COMPLETO -->
+        <main id="evaluationScreen" class="hidden">
+            <form id="evaluationForm" data-evaluation-id="">
+                <section class="card">
+                    <h2 style="animation-delay: 0.1s;">Dados do Aluno</h2>
+                    <div class="grid-container">
+                        <div class="input-group"><label for="name">Nome:</label><input type="text" id="name" required placeholder="Nome completo"></div>
+                        <div class="input-group"><label for="age">Idade:</label><input type="number" id="age" required placeholder="Ex: 25" min="1"></div>
+                        <div class="input-group"><label for="gender">Sexo:</label><select id="gender" required><option value="male">Masculino</option><option value="female">Feminino</option></select></div>
+                        <div class="input-group"><label for="weight">Peso (kg):</label><input type="number" step="0.1" id="weight" required placeholder="Ex: 70.5" min="1"></div>
+                        <div class="input-group"><label for="height">Altura (cm):</label><input type="number" id="height" required placeholder="Ex: 175" min="1"></div>
+                    </div>
+                </section>
+                <section class="card" style="animation-delay: 0.2s;">
+                    <h2>Medidas de Circunferência (cm)</h2>
+                     <div class="grid-container">
+                        <div class="input-group"><label for="arm">Braço:</label><input type="number" step="0.1" id="arm"></div>
+                        <div class="input-group"><label for="forearm">Antebraço:</label><input type="number" step="0.1" id="forearm"></div>
+                        <div class="input-group"><label for="chest">Tórax:</label><input type="number" step="0.1" id="chest"></div>
+                        <div class="input-group"><label for="waist">Cintura:</label><input type="number" step="0.1" id="waist"></div>
+                        <div class="input-group"><label for="abdomen">Abdômen:</label><input type="number" step="0.1" id="abdomen"></div>
+                        <div class="input-group"><label for="hip">Quadril:</label><input type="number" step="0.1" id="hip"></div>
+                        <div class="input-group"><label for="thigh">Coxa:</label><input type="number" step="0.1" id="thigh"></div>
+                        <div class="input-group"><label for="leg">Perna:</label><input type="number" step="0.1" id="leg"></div>
+                    </div>
+                </section>
+                <section class="card" style="animation-delay: 0.3s;">
+                    <h2>Dobras Cutâneas (mm) - Pollock 7</h2>
+                    <div class="grid-container">
+                        <div class="input-group"><label for="subscapular">Subescapular:</label><input type="number" step="0.1" id="subscapular" required min="1"></div>
+                        <div class="input-group"><label for="triceps">Tricipital:</label><input type="number" step="0.1" id="triceps" required min="1"></div>
+                        <div class="input-group"><label for="pectoral">Peitoral:</label><input type="number" step="0.1" id="pectoral" required min="1"></div>
+                        <div class="input-group"><label for="midaxillary">Axilar Média:</label><input type="number" step="0.1" id="midaxillary" required min="1"></div>
+                        <div class="input-group"><label for="suprailiac">Supra-ilíaca:</label><input type="number" step="0.1" id="suprailiac" required min="1"></div>
+                        <div class="input-group"><label for="abdominalSkinfold">Abdominal:</label><input type="number" step="0.1" id="abdominalSkinfold" required min="1"></div>
+                        <div class="input-group"><label for="thighSkinfold">Coxa:</label><input type="number" step="0.1" id="thighSkinfold" required min="1"></div>
+                    </div>
+                </section>
+                <div class="form-actions"><button type="button" id="btnBackToMenu" class="btn btn-secondary">Voltar</button><button type="button" id="btnSaveDraft" class="btn btn-secondary">Salvar Rascunho</button><button type="submit" class="btn btn-primary">Calcular e Salvar</button></div>
+            </form>
+        </main>
+        
+        <!-- TELA DE RESULTADOS - HTML COMPLETO -->
+        <section id="results" class="card hidden">
+            <h2>Resultados da Avaliação de <span id="result-name"></span></h2>
+            <div id="results-content"></div>
+            <div id="final-grade-container" style="text-align: center; margin-top: 2.5rem;">
+                <h3>Nota Final</h3>
+                <span id="final-grade"></span>
+                <span id="grade-classification" style="display: block; font-size: 1.3rem; font-weight: 500; margin-top: 0.5rem;"></span>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;"><button id="btnCloseResults" class="btn btn-secondary">Fechar</button></div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- SELEÇÃO DE ELEMENTOS DO DOM ---
+            const body = document.body;
+            const mainMenu = document.getElementById('mainMenu');
+            const evaluationScreen = document.getElementById('evaluationScreen');
+            const resultsScreen = document.getElementById('results');
+            const form = document.getElementById('evaluationForm');
+            const historyList = document.getElementById('historyList');
+            const emptyHistoryMessage = document.getElementById('emptyHistoryMessage');
+            const btnNewEvaluation = document.getElementById('btnNewEvaluation');
+            const btnBackToMenu = document.getElementById('btnBackToMenu');
+            const btnSaveDraft = document.getElementById('btnSaveDraft');
+            const btnCloseResults = document.getElementById('btnCloseResults');
+            const openSettingsBtn = document.getElementById('openSettingsBtn');
+            const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+            const settingsPanel = document.getElementById('settingsPanel');
+            const overlay = document.getElementById('overlay');
+            const themeToggle = document.getElementById('themeToggle');
+            const themeLabel = document.getElementById('themeLabel');
+            const profileNameInput = document.getElementById('profileName');
+            const saveProfileBtn = document.getElementById('saveProfileBtn');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const exportDataBtn = document.getElementById('exportDataBtn');
+            const importDataBtn = document.getElementById('importDataBtn');
+            const importFileInput = document.getElementById('importFileInput');
+            const clearDataBtn = document.getElementById('clearDataBtn');
+
+            // --- CHAVES DO LOCALSTORAGE ---
+            const HISTORY_KEY = 'elsonAvaliaHistory_v4';
+            const THEME_KEY = 'elsonAvaliaTheme';
+            const PROFILE_KEY = 'elsonAvaliaProfile';
+
+            // --- FUNÇÕES DE OTIMIZAÇÃO ---
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            // Preload de recursos críticos
+            function preloadCriticalResources() {
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
+                link.as = 'style';
+                document.head.appendChild(link);
+            }
+
+            // Cleanup para evitar vazamentos de memória
+            function cleanupEventListeners() {
+                window.removeEventListener('beforeunload', cleanupEventListeners);
+            }
+
+            // --- FUNÇÕES DE NAVEGAÇÃO ---
+            const showScreen = (screenName) => {
+                requestAnimationFrame(() => {
+                    mainMenu.classList.add('hidden');
+                    evaluationScreen.classList.add('hidden');
+                    resultsScreen.classList.add('hidden');
+                    document.getElementById(screenName).classList.remove('hidden');
+                    window.scrollTo(0, 0);
+                });
+            };
+
+            const toggleSettingsPanel = (show) => {
+                requestAnimationFrame(() => {
+                    settingsPanel.classList.toggle('active', show);
+                    overlay.classList.toggle('active', show);
+                });
+            };
+
+            // --- FUNÇÕES DE TEMA E PERFIL ---
+            const applyTheme = (theme) => {
+                requestAnimationFrame(() => {
+                    body.dataset.theme = theme;
+                    themeToggle.checked = theme === 'dark';
+                    themeLabel.textContent = theme === 'dark' ? 'Tema Escuro' : 'Tema Claro';
+                    localStorage.setItem(THEME_KEY, theme);
+                });
+            };
+
+            const loadProfile = () => {
+                const profileName = localStorage.getItem(PROFILE_KEY) || '';
+                profileNameInput.value = profileName;
+                welcomeMessage.textContent = profileName ? `Bem-vindo, ${profileName}.` : 'A nova era das avaliações físicas.';
+            };
+            
+            // --- FUNÇÕES DE GERENCIAMENTO DE DADOS ---
+            const getHistory = () => JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+            const saveHistory = (history) => localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+            
+            const renderHistory = debounce(() => {
+                requestAnimationFrame(() => {
+                    const history = getHistory();
+                    historyList.innerHTML = '';
+                    emptyHistoryMessage.classList.toggle('hidden', history.length > 0);
+                    history.sort((a, b) => b.id - a.id);
+                    history.forEach(eval => {
+                        const date = new Date(eval.id).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                        const item = document.createElement('div');
+                        item.className = 'history-item';
+                        item.innerHTML = `
+                            <div>
+                                <strong style="color: var(--text-primary-color);">${eval.data.name || 'Aluno sem nome'}</strong>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary-color); display: block;">${date}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                               <span style="padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: white; background-color: var(--${eval.status === 'complete' ? 'success' : 'draft'}-color);">
+                                   ${eval.status === 'complete' ? 'Completa' : 'Rascunho'}
+                               </span>
+                               <div class="history-actions" style="display: flex; gap: 0.8rem;">
+                                   <button class="btn btn-secondary" data-action="load" data-id="${eval.id}" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Ver/Editar</button>
+                                   <button class="btn" data-action="delete" data-id="${eval.id}" style="background-color: var(--danger-color); color: white; font-size: 0.8rem; padding: 0.4rem 0.8rem;">Excluir</button>
+                               </div>
+                            </div>`;
+                        historyList.appendChild(item);
+                    });
+                });
+            }, 16);
+            
+            // --- FUNÇÕES DE FORMULÁRIO E CÁLCULO ---
+            const clearForm = () => { form.reset(); form.dataset.evaluationId = ''; };
+            const getFormData = () => { const data = {}; form.querySelectorAll('input, select').forEach(input => data[input.id] = input.value); return data; };
+            const setFormData = (data) => { form.querySelectorAll('input, select').forEach(input => { if (data[input.id]) input.value = data[input.id]; }); };
+            
+            const saveEvaluation = (status) => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const data = getFormData();
+                        if (!data.name && status === 'draft') { 
+                            alert("Insira o nome do aluno para salvar um rascunho."); 
+                            resolve(false); 
+                            return; 
+                        }
+                        let history = getHistory();
+                        let evalId = form.dataset.evaluationId || Date.now();
+                        history = history.filter(e => e.id != evalId);
+                        history.push({ id: evalId, status, data });
+                        saveHistory(history);
+                        renderHistory();
+                        resolve(true);
+                    }, 0);
+                });
+            };
+
+            const calculateResults = (data) => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const age = parseInt(data.age), gender = data.gender, weight = parseFloat(data.weight), height = parseInt(data.height);
+                        const skinfolds = ['subscapular', 'triceps', 'pectoral', 'midaxillary', 'suprailiac', 'abdominalSkinfold', 'thighSkinfold'].map(id => parseFloat(data[id]));
+                        const sumOfSkinfolds = skinfolds.reduce((a, b) => a + b, 0);
+                        const heightInMeters = height / 100;
+                        const bmi = weight / (heightInMeters * heightInMeters);
+                        let bodyDensity;
+                        if (gender === 'male') { bodyDensity = 1.112 - (0.00043499 * sumOfSkinfolds) + (0.00000055 * Math.pow(sumOfSkinfolds, 2)) - (0.00028826 * age); } else { bodyDensity = 1.097 - (0.00046971 * sumOfSkinfolds) + (0.00000056 * Math.pow(sumOfSkinfolds, 2)) - (0.00012828 * age); }
+                        const bodyFatPercentage = ((4.95 / bodyDensity) - 4.5) * 100;
+                        const fatMass = weight * (bodyFatPercentage / 100);
+                        const leanMass = weight - fatMass;
+                        let bmr = gender === 'male' ? 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age) : 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+                        const idealWeightMin = 18.5 * Math.pow(heightInMeters, 2), idealWeightMax = 24.9 * Math.pow(heightInMeters, 2);
+                        let grade = 10.0;
+                        if (bmi < 18.5 || bmi >= 25) grade -= 2.5;
+                        if (bmi >= 30) grade -= 1.5;
+                        if (gender === 'male' ? bodyFatPercentage > 25 : bodyFatPercentage > 32) grade -= 3;
+                        else if (gender === 'male' ? bodyFatPercentage > 18 : bodyFatPercentage > 25) grade -= 1.5;
+                        if (grade < 0) grade = 0;
+                        resolve({ bmi, bodyFatPercentage, fatMass, leanMass, bmr, idealWeightMin, idealWeightMax, grade });
+                    }, 0);
+                });
+            };
+
+            const displayResults = (data, results) => {
+                requestAnimationFrame(() => {
+                    document.getElementById('result-name').textContent = data.name;
+                    let bmiClassification = 'Peso Normal';
+                    if (results.bmi < 18.5) bmiClassification = 'Abaixo do Peso';
+                    else if (results.bmi >= 25 && results.bmi < 30) bmiClassification = 'Sobrepeso';
+                    else if (results.bmi >= 30) bmiClassification = 'Obesidade';
+                    document.getElementById('results-content').innerHTML = `<p><strong>IMC:</strong> ${results.bmi.toFixed(2)} (${bmiClassification})</p><p><strong>% Gordura:</strong> ${results.bodyFatPercentage.toFixed(2)}%</p><p><strong>Massa Gorda:</strong> ${results.fatMass.toFixed(2)} kg</p><p><strong>Massa Magra:</strong> ${results.leanMass.toFixed(2)} kg</p><p><strong>TMB:</strong> ${results.bmr.toFixed(0)} kcal/dia</p><p><strong>Peso Ideal:</strong> ${results.idealWeightMin.toFixed(1)} kg - ${results.idealWeightMax.toFixed(1)} kg</p>`;
+                    let gradeClassification = '';
+                    if (results.grade >= 8.5) { gradeClassification = 'Excelente'; } else if (results.grade >= 7.0) { gradeClassification = 'Bom'; } else if (results.grade >= 5.0) { gradeClassification = 'Regular'; } else { gradeClassification = 'Precisa Melhorar'; }
+                    document.getElementById('final-grade').textContent = results.grade.toFixed(1);
+                    document.getElementById('grade-classification').textContent = gradeClassification;
+                    showScreen('results');
+                });
+            };
+
+            // --- EVENT LISTENERS ---
+            btnNewEvaluation.addEventListener('click', () => { clearForm(); showScreen('evaluationScreen'); });
+            btnBackToMenu.addEventListener('click', () => showScreen('mainMenu'));
+            btnCloseResults.addEventListener('click', () => showScreen('mainMenu'));
+            btnSaveDraft.addEventListener('click', async () => { 
+                if(await saveEvaluation('draft')) { 
+                    alert('Rascunho salvo!'); 
+                    showScreen('mainMenu'); 
+                } 
+            });
+            
+            form.addEventListener('submit', async (e) => { 
+                e.preventDefault(); 
+                const data = getFormData(); 
+                const results = await calculateResults(data); 
+                if (await saveEvaluation('complete')) 
+                    displayResults(data, results); 
+            });
+            
+            openSettingsBtn.addEventListener('click', () => toggleSettingsPanel(true));
+            closeSettingsBtn.addEventListener('click', () => toggleSettingsPanel(false));
+            overlay.addEventListener('click', () => toggleSettingsPanel(false));
+            
+            saveProfileBtn.addEventListener('click', () => { 
+                localStorage.setItem(PROFILE_KEY, profileNameInput.value); 
+                loadProfile(); 
+                saveProfileBtn.textContent = 'Salvo!'; 
+                setTimeout(() => { 
+                    saveProfileBtn.textContent = 'Salvar Perfil'; 
+                }, 2000); 
+            });
+            
+            themeToggle.addEventListener('change', () => applyTheme(themeToggle.checked ? 'dark' : 'light'));
+            
+            historyList.addEventListener('click', (e) => {
+                const button = e.target.closest('button');
+                if (!button) return;
+                const { action, id } = button.dataset;
+                let history = getHistory();
+                if (action === 'delete') { 
+                    if (confirm('Tem certeza?')) { 
+                        saveHistory(history.filter(eval => eval.id != id)); 
+                        renderHistory(); 
+                    } 
+                } 
+                else if (action === 'load') { 
+                    const evalToLoad = history.find(eval => eval.id == id); 
+                    if (evalToLoad) { 
+                        clearForm(); 
+                        setFormData(evalToLoad.data); 
+                        form.dataset.evaluationId = id; 
+                        showScreen('evaluationScreen'); 
+                    } 
+                }
+            });
+            
+            exportDataBtn.addEventListener('click', () => { /* ... */ });
+            importDataBtn.addEventListener('click', () => importFileInput.click());
+            importFileInput.addEventListener('change', (event) => { /* ... */ });
+            clearDataBtn.addEventListener('click', () => { /* ... */ });
+
+            // --- INICIALIZAÇÃO DA APLICAÇÃO ---
+            const initializeApp = () => {
+                requestAnimationFrame(() => {
+                    applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+                    loadProfile();
+                    renderHistory();
+                    showScreen('mainMenu');
+                    preloadCriticalResources();
+                    window.addEventListener('beforeunload', cleanupEventListeners);
+                });
+            };
+            
+            initializeApp();
+        });
+    </script>
 </body>
 </html>
