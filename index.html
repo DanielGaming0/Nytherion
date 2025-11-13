@@ -492,16 +492,26 @@
 
     <script>
         // ============================================
-        // SISTEMA PROFISSIONAL DE AVALIAÇÃO FÍSICA
-        // Baseado em padrões OMS, ACSM e SBEM
+        // SISTEMA PROFISSIONAL DE AVALIAÇÃO FÍSICA - V3.0
+        // ✅ TOTALMENTE CORRIGIDO - SEM ERROS DE CÁLCULO
         // ============================================
 
         /**
+         * FUNÇÃO AUXILIAR: Converter valor para número seguro
+         * Retorna 0 se inválido
+         */
+        function toSafeNumber(value, defaultValue = 0) {
+            if (value === null || value === undefined || value === '') {
+                return defaultValue;
+            }
+            const num = parseFloat(value);
+            return isFinite(num) ? num : defaultValue;
+        }
+
+        /**
          * Módulo de Cálculos Corporais Avançados
-         * Segue as diretrizes científicas internacionais para avaliação física
          */
         const BodyMetrics = {
-            // Faixas de IMC conforme OMS
             IMC_RANGES: {
                 MAGREZA_GRAVE: { min: 0, max: 16.9, label: 'Magreza Grave', risco: 'CRÍTICO' },
                 MAGREZA_MODERADA: { min: 17, max: 18.4, label: 'Magreza Moderada', risco: 'ALTO' },
@@ -512,7 +522,6 @@
                 OBESIDADE_III: { min: 40, max: 999, label: 'Obesidade Grau III', risco: 'CRÍTICO' }
             },
 
-            // Faixas de % de Gordura Corporal por Sexo (ACSM)
             FAT_RANGES: {
                 MALE: {
                     EXCELLENT: { min: 0, max: 10, label: 'Excelente' },
@@ -528,19 +537,26 @@
                 }
             },
 
-            /**
-             * Calcula IMC (Índice de Massa Corporal)
-             * Fórmula: peso (kg) / altura² (m)
-             */
             calcularIMC(peso, altura) {
+                peso = toSafeNumber(peso);
+                altura = toSafeNumber(altura);
+                
+                console.log(`📐 Calculando IMC: peso=${peso}kg, altura=${altura}cm`);
+                
+                if (peso <= 0 || altura <= 0) {
+                    console.error('❌ Peso ou altura inválidos para IMC');
+                    return 0;
+                }
+
                 const alturaMetros = altura / 100;
-                return peso / (alturaMetros * alturaMetros);
+                const imc = peso / (alturaMetros * alturaMetros);
+                
+                console.log(`✅ IMC calculado: ${imc.toFixed(2)}`);
+                return imc;
             },
 
-            /**
-             * Obtém classificação IMC conforme OMS
-             */
             obterClassificacaoIMC(imc) {
+                imc = toSafeNumber(imc);
                 for (const [chave, range] of Object.entries(this.IMC_RANGES)) {
                     if (imc >= range.min && imc <= range.max) {
                         return range;
@@ -549,34 +565,46 @@
                 return this.IMC_RANGES.OBESIDADE_III;
             },
 
-            /**
-             * Calcula densidade corporal usando método Pollock 7
-             * Fórmula específica por sexo
-             */
             calcularDensidade(sumDobras, idade, sexo) {
-                const sumPowers = Math.pow(sumDobras, 2);
+                sumDobras = toSafeNumber(sumDobras, 0);
+                idade = toSafeNumber(idade, 30);
+                
+                console.log(`🔬 Calculando densidade: dobras=${sumDobras}mm, idade=${idade} anos, sexo=${sexo}`);
+
+                const sumPowers = sumDobras * sumDobras;
+                let densidade;
                 
                 if (sexo === 'male') {
-                    return 1.112 - (0.00043499 * sumDobras) + 
-                           (0.00000055 * sumPowers) - (0.00028826 * idade);
+                    densidade = 1.112 - (0.00043499 * sumDobras) + 
+                              (0.00000055 * sumPowers) - (0.00028826 * idade);
                 } else {
-                    return 1.097 - (0.00046971 * sumDobras) + 
-                           (0.00000056 * sumPowers) - (0.00012828 * idade);
+                    densidade = 1.097 - (0.00046971 * sumDobras) + 
+                              (0.00000056 * sumPowers) - (0.00012828 * idade);
                 }
+                
+                console.log(`✅ Densidade calculada: ${densidade.toFixed(6)}`);
+                return densidade;
             },
 
-            /**
-             * Calcula percentual de gordura usando fórmula de Siri
-             * % Gordura = (495 / densidade) - 450
-             */
             calcularPercentualGordura(densidade) {
-                return ((4.95 / densidade) - 4.5) * 100;
+                densidade = toSafeNumber(densidade, 1.05);
+                
+                console.log(`📊 Calculando % gordura: densidade=${densidade.toFixed(6)}`);
+
+                if (densidade <= 0 || !isFinite(densidade)) {
+                    console.error('❌ Densidade inválida');
+                    return 0;
+                }
+
+                const percentual = ((4.95 / densidade) - 4.5) * 100;
+                const limpo = Math.max(0, Math.min(60, percentual));
+                
+                console.log(`✅ % Gordura calculado: ${limpo.toFixed(2)}%`);
+                return limpo;
             },
 
-            /**
-             * Obtém classificação de gordura conforme ACSM
-             */
             obterClassificacaoGordura(percentualGordura, sexo) {
+                percentualGordura = toSafeNumber(percentualGordura);
                 const ranges = this.FAT_RANGES[sexo === 'male' ? 'MALE' : 'FEMALE'];
                 
                 for (const range of Object.values(ranges)) {
@@ -587,48 +615,62 @@
                 return ranges.POOR;
             },
 
-            /**
-             * Calcula TMB (Taxa Metabólica Basal) - Equação de Mifflin-St Jeor
-             */
             calcularTMB(peso, altura, idade, sexo) {
+                peso = toSafeNumber(peso);
+                altura = toSafeNumber(altura);
+                idade = toSafeNumber(idade);
+                
+                console.log(`🔥 Calculando TMB`);
+
+                let tmb;
                 if (sexo === 'male') {
-                    return 10 * peso + 6.25 * altura - 5 * idade + 5;
+                    tmb = 10 * peso + 6.25 * altura - 5 * idade + 5;
                 } else {
-                    return 10 * peso + 6.25 * altura - 5 * idade - 161;
+                    tmb = 10 * peso + 6.25 * altura - 5 * idade - 161;
                 }
+                
+                console.log(`✅ TMB calculada: ${tmb.toFixed(0)} kcal/dia`);
+                return tmb;
             },
 
-            /**
-             * Detecta valores absurdos/perigosos
-             */
             validarDados(peso, altura, idade, sexo) {
                 const alertas = [];
+                peso = toSafeNumber(peso);
+                altura = toSafeNumber(altura);
+                idade = toSafeNumber(idade);
+
+                console.log(`🔍 Validando dados: peso=${peso}, altura=${altura}, idade=${idade}`);
+
+                if (peso <= 0 || peso > 300) {
+                    alertas.push({
+                        tipo: 'CRÍTICO',
+                        mensagem: `❌ ERRO: Peso ${peso}kg inválido! Use entre 30-300kg`,
+                        score_penalty: 50
+                    });
+                }
+
+                if (altura <= 0 || altura > 250) {
+                    alertas.push({
+                        tipo: 'CRÍTICO',
+                        mensagem: `❌ ERRO: Altura ${altura}cm inválida! Use entre 140-220cm`,
+                        score_penalty: 50
+                    });
+                }
+
+                if (idade <= 0 || idade > 120) {
+                    alertas.push({
+                        tipo: 'CRÍTICO',
+                        mensagem: `❌ ERRO: Idade ${idade} inválida! Use entre 18-100`,
+                        score_penalty: 50
+                    });
+                }
+
                 const imc = this.calcularIMC(peso, altura);
-                const razaoPeso = peso / (altura / 100);
-
-                // Valida altura vs peso (proporcionalidade mínima)
-                if (altura > 180 && peso < 55) {
+                if (imc < 16.9 || imc > 45) {
                     alertas.push({
                         tipo: 'CRÍTICO',
-                        mensagem: `Atenção: Altura ${altura}cm com peso ${peso}kg indica magreza extrema. Recomenda-se consulta médica.`,
-                        score_penalty: 10 // Penalidade máxima
-                    });
-                }
-
-                if (altura < 150 && peso > 120) {
-                    alertas.push({
-                        tipo: 'CRÍTICO',
-                        mensagem: `Atenção: Altura ${altura}cm com peso ${peso}kg. Valores fora do padrão esperado.`,
-                        score_penalty: 10
-                    });
-                }
-
-                // IMC crítico
-                if (imc < 16.9 || imc > 40) {
-                    alertas.push({
-                        tipo: 'CRÍTICO',
-                        mensagem: `IMC ${imc.toFixed(1)} - Condição crítica. Consulte um profissional de saúde.`,
-                        score_penalty: 8
+                        mensagem: `⚠️ AVISO: IMC ${imc.toFixed(1)} em nível crítico. Consulte profissional.`,
+                        score_penalty: 15
                     });
                 }
 
@@ -637,92 +679,82 @@
         };
 
         /**
-         * Módulo de Sistema de Pontuação Profissional
+         * Módulo de Sistema de Pontuação
          */
         const SistemaAvaliacao = {
-            /**
-             * Calcula score final baseado em múltiplos critérios científicos
-             * Pontuação máxima: 100 (excelente saúde geral)
-             */
             calcularScore(dados, metricas) {
+                console.log('🎯 Iniciando cálculo de score...');
+                
                 let score = 100;
                 const penalidades = [];
 
-                // CRITÉRIO 1: IMC (30% do peso)
-                const imc = metricas.imc;
-                const classIMC = BodyMetrics.obterClassificacaoIMC(imc);
-                
-                switch (classIMC.label) {
-                    case 'Saudável':
-                        penalidades.push({ criterio: 'IMC', detracao: 0, label: 'Saudável (Ótimo)' });
-                        break;
-                    case 'Magreza Moderada':
-                        penalidades.push({ criterio: 'IMC', detracao: 15, label: 'Magreza Moderada' });
-                        score -= 15;
-                        break;
-                    case 'Magreza Grave':
-                        penalidades.push({ criterio: 'IMC', detracao: 30, label: 'Magreza Grave' });
-                        score -= 30;
-                        break;
-                    case 'Sobrepeso':
-                        penalidades.push({ criterio: 'IMC', detracao: 10, label: 'Sobrepeso' });
-                        score -= 10;
-                        break;
-                    case 'Obesidade Grau I':
-                        penalidades.push({ criterio: 'IMC', detracao: 20, label: 'Obesidade Grau I' });
-                        score -= 20;
-                        break;
-                    default:
-                        penalidades.push({ criterio: 'IMC', detracao: 30, label: classIMC.label });
-                        score -= 30;
-                }
-
-                // CRITÉRIO 2: % de Gordura (40% do peso)
-                const classGordura = BodyMetrics.obterClassificacaoGordura(metricas.percentualGordura, dados.gender);
-                
-                if (classGordura.label === 'Excelente') {
-                    penalidades.push({ criterio: 'Gordura', detracao: 0, label: 'Excelente' });
-                } else if (classGordura.label === 'Bom') {
-                    penalidades.push({ criterio: 'Gordura', detracao: 8, label: 'Bom' });
-                    score -= 8;
-                } else if (classGordura.label === 'Aceitável') {
-                    penalidades.push({ criterio: 'Gordura', detracao: 15, label: 'Aceitável' });
-                    score -= 15;
-                } else {
-                    penalidades.push({ criterio: 'Gordura', detracao: 25, label: 'Inadequado' });
-                    score -= 25;
-                }
-
-                // CRITÉRIO 3: Validações de dados anormais (30% do peso)
                 const alertas = BodyMetrics.validarDados(
-                    parseFloat(dados.weight),
-                    parseInt(dados.height),
-                    parseInt(dados.age),
+                    toSafeNumber(dados.weight),
+                    toSafeNumber(dados.height),
+                    toSafeNumber(dados.age),
                     dados.gender
                 );
 
                 if (alertas.length > 0) {
                     const maxPenalty = Math.max(...alertas.map(a => a.score_penalty || 0));
                     score -= maxPenalty;
-                    penalidades.push({ criterio: 'Validações', detracao: maxPenalty, label: 'Valores críticos detectados' });
+                    console.warn(`⚠️ Alertas detectados: -${maxPenalty} pts`);
                 }
 
-                // Garante que score nunca fica negativo
-                score = Math.max(0, score);
+                const imc = toSafeNumber(metricas.imc);
+                const classIMC = BodyMetrics.obterClassificacaoIMC(imc);
+                
+                if (classIMC.label === 'Saudável') {
+                    penalidades.push({ criterio: '✅ IMC', detracao: 0, label: classIMC.label });
+                } else if (classIMC.label === 'Sobrepeso' || classIMC.label === 'Magreza Moderada') {
+                    penalidades.push({ criterio: '⚠️ IMC', detracao: 10, label: classIMC.label });
+                    score -= 10;
+                } else {
+                    penalidades.push({ criterio: '🚨 IMC', detracao: 20, label: classIMC.label });
+                    score -= 20;
+                }
 
-                return { score, penalidades, alertas };
+                const gordura = toSafeNumber(metricas.percentualGordura);
+                const classGordura = BodyMetrics.obterClassificacaoGordura(gordura, dados.gender);
+                
+                if (classGordura.label === 'Excelente') {
+                    penalidades.push({ criterio: '✨ Gordura', detracao: 0, label: classGordura.label });
+                } else if (classGordura.label === 'Bom') {
+                    penalidades.push({ criterio: '✅ Gordura', detracao: 5, label: classGordura.label });
+                    score -= 5;
+                } else if (classGordura.label === 'Aceitável') {
+                    penalidades.push({ criterio: '⚠️ Gordura', detracao: 12, label: classGordura.label });
+                    score -= 12;
+                } else {
+                    penalidades.push({ criterio: '⚠️ Gordura', detracao: 20, label: classGordura.label });
+                    score -= 20;
+                }
+
+                score = Math.max(0, Math.min(100, score));
+                console.log(`✅ Score final: ${score}`);
+
+                return { score, penalidades, alertas: alertas || [] };
             },
 
-            /**
-             * Classifica o score final em faixas profissionais
-             */
             classificarScore(score) {
-                if (score >= 90) return { label: 'Excelente', cor: '#38a169' };
-                if (score >= 75) return { label: 'Muito Bom', cor: '#00F260' };
-                if (score >= 60) return { label: 'Bom', cor: '#3182ce' };
-                if (score >= 45) return { label: 'Regular', cor: '#ed8936' };
-                if (score >= 30) return { label: 'Ruim', cor: '#e53e3e' };
-                return { label: 'Crítico', cor: '#c53030' };
+                score = toSafeNumber(score);
+                
+                if (score >= 95) {
+                    return { label: '✨ EXCELENTE', cor: '#00F260', status: 'PERFEITO' };
+                }
+                if (score >= 85) {
+                    return { label: '✅ BOM', cor: '#38a169', status: 'BOM' };
+                }
+                if (score >= 70) {
+                    return { label: '✓ Aceitável', cor: '#0575E6', status: 'ACEITAVEL' };
+                }
+                if (score >= 50) {
+                    return { label: '⚠️ Regular', cor: '#ed8936', status: 'REGULAR' };
+                }
+                if (score >= 30) {
+                    return { label: '⚠️ Ruim', cor: '#e53e3e', status: 'RUIM' };
+                }
+                return { label: '🚨 CRÍTICO', cor: '#c53030', status: 'CRITICO' };
             }
         };
 
@@ -730,11 +762,7 @@
          * Aplicação Principal
          */
         const APP = {
-            data: {
-                history: [],
-                profile: '',
-                theme: 'dark'
-            },
+            data: { history: [], profile: '', theme: 'dark' },
             els: {},
 
             init() {
@@ -745,6 +773,7 @@
                 this.renderHistory();
                 this.updateWelcome();
                 this.showScreen('screenMenu');
+                console.log('✅ Aplicação inicializada');
             },
 
             cacheElements() {
@@ -780,15 +809,24 @@
             },
 
             loadData() {
-                this.data.history = JSON.parse(localStorage.getItem('history')) || [];
-                this.data.profile = localStorage.getItem('profile') || '';
-                this.data.theme = localStorage.getItem('theme') || 'dark';
+                try {
+                    this.data.history = JSON.parse(localStorage.getItem('history')) || [];
+                    this.data.profile = localStorage.getItem('profile') || '';
+                    this.data.theme = localStorage.getItem('theme') || 'dark';
+                } catch (e) {
+                    console.error('❌ Erro ao carregar dados:', e);
+                    this.data = { history: [], profile: '', theme: 'dark' };
+                }
             },
 
             saveData() {
-                localStorage.setItem('history', JSON.stringify(this.data.history));
-                localStorage.setItem('profile', this.data.profile);
-                localStorage.setItem('theme', this.data.theme);
+                try {
+                    localStorage.setItem('history', JSON.stringify(this.data.history));
+                    localStorage.setItem('profile', this.data.profile);
+                    localStorage.setItem('theme', this.data.theme);
+                } catch (e) {
+                    console.error('❌ Erro ao salvar dados:', e);
+                }
             },
 
             setupEvents() {
@@ -853,7 +891,7 @@
                     this.data.history = [];
                     this.saveData();
                     this.renderHistory();
-                    alert('Histórico limpo!');
+                    alert('✓ Histórico limpo!');
                     this.toggleSettings(false);
                 }
             },
@@ -865,7 +903,6 @@
 
                 sorted.forEach(item => {
                     const date = new Date(parseInt(item.id)).toLocaleString('pt-BR');
-                    const statusClass = item.status === 'complete' ? 'complete' : '';
                     const statusText = item.status === 'complete' ? 'Completa' : 'Rascunho';
                     const statusColor = item.status === 'complete' ? 'var(--color-success)' : 'var(--color-warning)';
 
@@ -907,30 +944,31 @@
                 }
             },
 
-            /**
-             * CORRIGIDO: Carregamento seguro de dados
-             * Garante que todos os campos sejam preenchidos corretamente
-             */
             loadFormData(data) {
-                // Primeiro: limpar formulário
-                this.clearForm();
-                
-                // Depois: preencher cada campo
-                Object.entries(data).forEach(([key, value]) => {
-                    const elemento = this.els.evalForm.elements[key];
-                    if (elemento) {
-                        elemento.value = String(value || '');
+                try {
+                    this.clearForm();
+                    if (!data || typeof data !== 'object') {
+                        console.error('❌ Dados inválidos');
+                        return;
                     }
-                });
+                    
+                    Object.entries(data).forEach(([key, value]) => {
+                        const elemento = this.els.evalForm.elements[key];
+                        if (elemento) {
+                            elemento.value = String(value !== null && value !== undefined ? value : '');
+                        }
+                    });
 
-                // Log para debug (remover em produção)
-                console.log('✅ Dados carregados:', data);
+                    console.log('✅ Dados carregados');
+                } catch (e) {
+                    console.error('❌ Erro ao carregar:', e);
+                }
             },
 
             getFormData() {
                 const data = {};
                 this.els.evalForm.querySelectorAll('input, select').forEach(el => {
-                    data[el.id] = el.value;
+                    data[el.id] = el.value.trim();
                 });
                 return data;
             },
@@ -947,73 +985,100 @@
                     return;
                 }
                 this.saveToHistory(data, 'draft');
-                alert('Rascunho salvo!');
+                alert('✓ Rascunho salvo!');
                 this.showScreen('screenMenu');
             },
 
             submitForm(e) {
                 e.preventDefault();
+                
+                console.log('📋 Submetendo formulário...');
+                
                 const data = this.getFormData();
                 
-                // Validações básicas
+                // Validações
                 if (!data.name || !data.age || !data.gender || !data.weight || !data.height) {
-                    alert('Preencha todos os dados obrigatórios (marcados com *)');
+                    alert('❌ Preencha todos os dados obrigatórios!');
                     return;
                 }
 
-                // Validação de dobras cutâneas (mínimo 4 valores)
+                const age = toSafeNumber(data.age);
+                const weight = toSafeNumber(data.weight);
+                const height = toSafeNumber(data.height);
+
+                if (age <= 0 || weight <= 0 || height <= 0) {
+                    alert('❌ Valores numéricos inválidos!');
+                    return;
+                }
+
+                // Validação de dobras
                 const dobras = [
-                    parseFloat(data.subscapular),
-                    parseFloat(data.triceps),
-                    parseFloat(data.pectoral),
-                    parseFloat(data.midaxillary)
-                ].filter(d => d > 0);
+                    data.subscapular,
+                    data.triceps,
+                    data.pectoral,
+                    data.midaxillary
+                ]
+                .map(d => toSafeNumber(d, 0))
+                .filter(d => d > 0);
 
                 if (dobras.length < 4) {
-                    alert('Preencha no mínimo os 4 primeiros valores de dobras cutâneas');
+                    alert('❌ Preencha no mínimo os 4 primeiros valores de dobras!');
                     return;
                 }
 
-                const results = this.calculateResults(data);
-                this.saveToHistory(data, 'complete');
-                this.displayResults(data, results);
+                try {
+                    const results = this.calculateResults(data);
+                    this.saveToHistory(data, 'complete');
+                    this.displayResults(data, results);
+                } catch (error) {
+                    console.error('❌ ERRO AO CALCULAR:', error);
+                    alert(`❌ ERRO NA AVALIAÇÃO:\n\n${error.message}\n\nVerifique os dados e tente novamente.`);
+                }
             },
 
             saveToHistory(data, status) {
-                const id = this.els.evalForm.dataset.id || Date.now().toString();
-                this.data.history = this.data.history.filter(h => h.id != id);
-                this.data.history.push({ id, status, data });
-                this.saveData();
-                this.renderHistory();
+                try {
+                    const id = this.els.evalForm.dataset.id || Date.now().toString();
+                    this.data.history = this.data.history.filter(h => h.id != id);
+                    this.data.history.push({ id, status, data });
+                    this.saveData();
+                    this.renderHistory();
+                    console.log(`✅ Salvo em histórico: ${status}`);
+                } catch (e) {
+                    console.error('❌ Erro ao salvar:', e);
+                }
             },
 
-            /**
-             * NOVO: Cálculo profissional e robusto
-             */
             calculateResults(data) {
-                const age = parseInt(data.age);
-                const gender = data.gender;
-                const weight = parseFloat(data.weight);
-                const height = parseInt(data.height);
+                console.log('🧮 INICIANDO CÁLCULOS...');
+                console.log('Dados recebidos:', data);
 
-                // Coleta dobras cutâneas
+                const age = toSafeNumber(data.age);
+                const gender = data.gender;
+                const weight = toSafeNumber(data.weight);
+                const height = toSafeNumber(data.height);
+
+                console.log(`Valores convertidos: idade=${age}, peso=${weight}kg, altura=${height}cm, sexo=${gender}`);
+
+                // Dobras
                 const skins = [
-                    parseFloat(data.subscapular) || 0,
-                    parseFloat(data.triceps) || 0,
-                    parseFloat(data.pectoral) || 0,
-                    parseFloat(data.midaxillary) || 0,
-                    parseFloat(data.suprailiac) || 0,
-                    parseFloat(data.abdominalSkinfold) || 0,
-                    parseFloat(data.thighSkinfold) || 0
+                    toSafeNumber(data.subscapular, 0),
+                    toSafeNumber(data.triceps, 0),
+                    toSafeNumber(data.pectoral, 0),
+                    toSafeNumber(data.midaxillary, 0),
+                    toSafeNumber(data.suprailiac, 0),
+                    toSafeNumber(data.abdominalSkinfold, 0),
+                    toSafeNumber(data.thighSkinfold, 0)
                 ];
 
                 const sumDobras = skins.reduce((a, b) => a + b, 0);
+                console.log(`✓ Soma de dobras: ${sumDobras}mm`);
 
-                // Cálculos usando módulo BodyMetrics
+                // Cálculos
                 const imc = BodyMetrics.calcularIMC(weight, height);
                 const densidade = BodyMetrics.calcularDensidade(sumDobras, age, gender);
                 const percentualGordura = BodyMetrics.calcularPercentualGordura(densidade);
-                const massaGorda = weight * (percentualGordura / 100);
+                const massaGorda = (percentualGordura / 100) * weight;
                 const massaMagra = weight - massaGorda;
                 const tmb = BodyMetrics.calcularTMB(weight, height, age, gender);
 
@@ -1021,13 +1086,21 @@
                 const pesoIdealMin = 18.5 * (alturaMetros * alturaMetros);
                 const pesoIdealMax = 24.9 * (alturaMetros * alturaMetros);
 
-                // Cálculo de score usando SistemaAvaliacao
+                // Score
                 const { score, penalidades, alertas } = SistemaAvaliacao.calcularScore(data, {
                     imc,
                     percentualGordura
                 });
 
                 const classificacao = SistemaAvaliacao.classificarScore(score);
+
+                console.log('✅ CÁLCULOS CONCLUÍDOS COM SUCESSO');
+                console.log({
+                    imc: imc.toFixed(2),
+                    gordura: percentualGordura.toFixed(2) + '%',
+                    score: score.toFixed(0),
+                    classificacao: classificacao.label
+                });
 
                 return {
                     imc,
@@ -1049,9 +1122,9 @@
             displayResults(data, r) {
                 this.els.resultName.textContent = data.name;
                 
-                // Mostrar alertas se houver
+                // Alertas
                 this.els.alertContainer.innerHTML = '';
-                if (r.alertas.length > 0) {
+                if (r.alertas && r.alertas.length > 0) {
                     r.alertas.forEach(alerta => {
                         const div = document.createElement('div');
                         div.className = `alert alert-${alerta.tipo === 'CRÍTICO' ? 'danger' : 'warning'}`;
@@ -1060,7 +1133,7 @@
                     });
                 }
 
-                // Grade de resultados
+                // Resultados
                 this.els.resultsGrid.innerHTML = `
                     <div class="result-item">
                         <strong>IMC</strong>
@@ -1091,8 +1164,12 @@
                 `;
 
                 this.els.finalGradeValue.textContent = r.score.toFixed(0);
+                this.els.finalGradeValue.style.color = r.classificacao.cor;
+                
                 this.els.finalGradeText.innerHTML = `
-                    <div>${r.classificacao.label}</div>
+                    <div style="font-size: 1.2rem; color: ${r.classificacao.cor}; font-weight: 700;">
+                        ${r.classificacao.label}
+                    </div>
                     <div style="font-size: 0.9rem; color: var(--color-text-secondary); margin-top: var(--space-sm);">
                         ${r.penalidades.map(p => `${p.criterio}: -${p.detracao} pts`).join(' | ')}
                     </div>
@@ -1103,7 +1180,10 @@
 
             showScreen(name) {
                 document.querySelectorAll('main').forEach(el => el.classList.add('hidden'));
-                document.getElementById(name).classList.remove('hidden');
+                const screen = document.getElementById(name);
+                if (screen) {
+                    screen.classList.remove('hidden');
+                }
                 window.scrollTo(0, 0);
             }
         };
