@@ -3,1193 +3,1108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ElsonAvalia - Sistema de Avaliação Física</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <title>Acesse UBS - Sistema de Agendamento</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ===== VARIÁVEIS E RESET ===== */
         :root {
-            --color-accent-1: #00F260;
-            --color-accent-2: #0575E6;
-            --color-bg-primary: #141E30;
-            --color-text-primary: #ffffff;
-            --color-text-secondary: #a0aec0;
-            --color-card-bg: rgba(255, 255, 255, 0.05);
-            --color-card-border: rgba(255, 255, 255, 0.1);
-            --color-input-bg: rgba(0, 0, 0, 0.2);
-            --color-input-border: rgba(255, 255, 255, 0.2);
-            --color-topbar-bg: rgba(20, 30, 48, 0.7);
-            --color-settings-bg: rgba(20, 30, 48, 0.98);
-            --color-overlay-bg: rgba(0, 0, 0, 0.5);
-            
-            --color-danger: #e53e3e;
-            --color-success: #38a169;
-            --color-warning: #ed8936;
-            --color-info: #3182ce;
-            
-            --space-xs: 0.25rem;
-            --space-sm: 0.5rem;
-            --space-md: 1rem;
-            --space-lg: 1.5rem;
-            --space-xl: 2rem;
-            --space-2xl: 3rem;
-
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 20px;
-
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
-            --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.2);
-            --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.3);
-
-            --transition-fast: 0.15s ease-out;
-            --transition-base: 0.3s ease-out;
+            --primary: #2a7f62;
+            --primary-dark: #1e5d47;
+            --primary-light: #3ba87c;
+            --secondary: #3498db;
+            --secondary-dark: #2980b9;
+            --secondary-light: #5dade2;
+            --accent: #e74c3c;
+            --accent-light: #ec7063;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --darker: #1a252f;
+            --gray: #6c757d;
+            --gray-light: #a0a6b3;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            --gradient-secondary: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            --gradient-accent: linear-gradient(135deg, var(--accent), var(--danger));
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 20px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        [data-theme="light"] {
-            --color-bg-primary: #f5f7fa;
-            --color-text-primary: #1a202c;
-            --color-text-secondary: #4a5568;
-            --color-card-bg: rgba(255, 255, 255, 0.95);
-            --color-card-border: rgba(0, 0, 0, 0.08);
-            --color-input-bg: rgba(0, 0, 0, 0.03);
-            --color-input-border: rgba(0, 0, 0, 0.15);
-            --color-topbar-bg: rgba(255, 255, 255, 0.85);
-            --color-settings-bg: rgba(248, 250, 252, 0.99);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--color-bg-primary);
-            color: var(--color-text-primary);
-            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark);
             line-height: 1.6;
-            transition: background-color var(--transition-base), color var(--transition-base);
+            overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        .topbar {
+        /* ===== LAYOUT E CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1.2rem 0;
+            box-shadow: var(--shadow-lg);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
+        }
+
+        .header-content {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: var(--space-md) var(--space-lg);
-            background: var(--color-topbar-bg);
-            border-bottom: 1px solid var(--color-card-border);
-            backdrop-filter: blur(4px);
+            justify-content: space-between;
         }
 
         .logo {
-            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.8rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
             font-weight: 700;
-            background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
         }
 
-        .btn-icon {
-            background: none;
-            border: none;
-            color: var(--color-text-primary);
-            cursor: pointer;
-            padding: var(--space-sm);
-            border-radius: var(--radius-md);
-            transition: opacity var(--transition-fast);
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 2px;
         }
 
-        .btn-icon:hover { background: rgba(0, 0, 0, 0.05); }
-        .btn-icon svg { width: 24px; height: 24px; stroke: currentColor; stroke-width: 1.5; }
-
-        .container { max-width: 900px; margin: 0 auto; padding: var(--space-md); }
-        .header { text-align: center; margin-bottom: var(--space-2xl); }
-        .header h1 {
-            font-size: clamp(2.5rem, 8vw, 3.5rem);
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .nav-links {
+            display: flex;
+            gap: 25px;
         }
-        .header p { font-size: 1.1rem; color: var(--color-text-secondary); }
 
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 50px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        main {
+            flex: 1;
+            padding: 3rem 0;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* ===== CARD STYLES ===== */
         .card {
-            background: var(--color-card-bg);
-            border: 1px solid var(--color-card-border);
-            border-radius: var(--radius-lg);
-            padding: var(--space-xl);
-            margin-bottom: var(--space-lg);
-            box-shadow: var(--shadow-sm);
-            animation: slideUp 0.5s ease-out;
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
 
-        .card h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: var(--space-lg);
-            padding-bottom: var(--space-md);
-            border-bottom: 1px solid var(--color-card-border);
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
         }
 
-        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
 
+        .card-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-align: center;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        /* ===== HOME SCREEN ===== */
+        .hero {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-icon {
+            font-size: 5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .hero h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        /* ===== BUTTONS ===== */
         .btn {
-            padding: var(--space-md) var(--space-lg);
-            border: none;
-            border-radius: var(--radius-md);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            font-family: inherit;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 10px;
+            padding: 16px 32px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-primary {
-            background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2));
-            color: white;
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            padding: var(--space-lg);
-            box-shadow: 0 4px 12px rgba(0, 242, 96, 0.3);
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition-slow);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-secondary {
-            background: var(--color-input-bg);
-            color: var(--color-text-primary);
-            border: 1px solid var(--color-input-border);
+            background: var(--gradient-secondary);
         }
 
-        .form-group {
-            margin-bottom: var(--space-lg);
+        .btn-accent {
+            background: var(--gradient-accent);
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: var(--space-sm);
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: var(--color-text-secondary);
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
         }
 
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: var(--space-md);
-            background: var(--color-input-bg);
-            border: 1px solid var(--color-input-border);
-            border-radius: var(--radius-md);
-            color: var(--color-text-primary);
-            font-family: inherit;
-            font-size: 1rem;
-            transition: border-color var(--transition-fast);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--color-accent-2);
-            box-shadow: 0 0 0 3px rgba(5, 117, 230, 0.15);
-        }
-
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-lg); }
-        .form-actions { display: flex; gap: var(--space-md); margin-top: var(--space-xl); flex-wrap: wrap; }
-        .form-actions .btn { flex: 1; min-width: 120px; }
-
-        .history-list { display: flex; flex-direction: column; gap: var(--space-md); }
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--space-lg);
-            background: var(--color-input-bg);
-            border-radius: var(--radius-md);
-            border-left: 4px solid transparent;
-            transition: all var(--transition-fast);
-        }
-
-        .history-item:hover { transform: translateX(8px); border-left-color: var(--color-accent-1); }
-        .history-item-info h3 { font-size: 1rem; margin-bottom: var(--space-xs); font-weight: 600; }
-        .history-item-info p { font-size: 0.85rem; color: var(--color-text-secondary); }
-        .history-item-actions { display: flex; gap: var(--space-sm); align-items: center; }
-        .status-badge {
-            padding: var(--space-xs) var(--space-sm);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .btn-outline:hover {
+            background: var(--primary);
             color: white;
         }
 
-        .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-xl); }
-        .result-item {
-            padding: var(--space-lg);
-            background: var(--color-input-bg);
-            border-radius: var(--radius-md);
-            border-left: 3px solid var(--color-accent-1);
+        .btn-block {
+            display: flex;
+            width: 100%;
         }
 
-        .result-item strong { display: block; font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: var(--space-xs); }
-        .result-item span { display: block; font-size: 1.5rem; font-weight: 600; }
-
-        .alert {
-            padding: var(--space-lg);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--space-lg);
-            border-left: 4px solid;
+        .btn-lg {
+            padding: 18px 40px;
+            font-size: 1.2rem;
         }
 
-        .alert-danger { background: rgba(229, 62, 62, 0.1); border-left-color: var(--color-danger); color: #ff6b6b; }
-        .alert-warning { background: rgba(237, 137, 54, 0.1); border-left-color: var(--color-warning); color: #ffa500; }
-        .alert-success { background: rgba(56, 161, 105, 0.1); border-left-color: var(--color-success); color: #68d391; }
+        /* ===== UBS GRID ===== */
+        .ubs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 2rem;
+        }
 
-        .final-grade {
+        .ubs-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
             text-align: center;
-            padding: var(--space-2xl) var(--space-lg);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
 
-        .final-grade-value {
+        .ubs-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: var(--transition);
+            transform-origin: left;
+        }
+
+        .ubs-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-light);
+        }
+
+        .ubs-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .ubs-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .ubs-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--dark);
+        }
+
+        .ubs-status {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* ===== SPECIALTIES GRID ===== */
+        .specialties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 2rem;
+        }
+
+        .specialty-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .specialty-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-secondary);
+            transform: scaleX(0);
+            transition: var(--transition);
+            transform-origin: left;
+        }
+
+        .specialty-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--secondary-light);
+        }
+
+        .specialty-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .specialty-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1.2rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .specialty-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* ===== VACANCIES SCREEN ===== */
+        .vacancies-info {
+            text-align: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .vacancies-count {
             font-size: 4rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .settings-overlay {
+        .vacancies-text {
+            font-size: 1.3rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .vacancies-alert {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent);
+        }
+
+        .vacancies-alert i {
+            color: var(--accent);
+            margin-right: 10px;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .breadcrumb-item {
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--primary);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .breadcrumb-separator {
+            color: var(--gray-light);
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--color-overlay-bg);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transition-base);
-            z-index: 99;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-out;
         }
 
-        .settings-overlay.active { opacity: 1; pointer-events: all; }
-
-        .settings-panel {
-            position: fixed;
-            top: 0;
-            right: -350px;
-            width: 320px;
-            height: 100vh;
-            background: var(--color-settings-bg);
-            z-index: 100;
-            transition: right var(--transition-base) cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            padding: var(--space-lg);
-            overflow-y: auto;
+        .modal.active {
+            display: flex;
         }
 
-        .settings-panel.active { right: 0; }
-        .settings-section { margin-bottom: var(--space-xl); }
-        .settings-section h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--color-text-secondary); margin-bottom: var(--space-md); }
-
-        .toggle-checkbox {
-            position: relative;
-            width: 50px;
-            height: 28px;
-        }
-
-        .toggle-checkbox input { display: none; }
-        .toggle-checkbox label {
-            display: block;
-            width: 100%;
-            height: 100%;
-            background: #cbd5e0;
-            border-radius: 34px;
-            cursor: pointer;
-            transition: background-color var(--transition-base);
-        }
-
-        .toggle-checkbox label:after {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
+        .modal-content {
             background: white;
+            border-radius: var(--border-radius-xl);
+            padding: 3rem;
+            max-width: 550px;
+            width: 90%;
+            box-shadow: var(--shadow-2xl);
+            position: relative;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--dark);
+            transform: rotate(90deg);
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .modal-text {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 2rem;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--darker);
+            color: white;
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: left var(--transition-base);
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
         }
 
-        .toggle-checkbox input:checked + label {
-            background: linear-gradient(90deg, var(--color-accent-1), var(--color-accent-2));
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
         }
 
-        .toggle-checkbox input:checked + label:after { left: 24px; }
-
-        .hidden { display: none !important; }
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* ===== RESPONSIVENESS ===== */
+        @media (max-width: 992px) {
+            .ubs-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .specialties-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
         }
 
         @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
-            .form-actions { flex-direction: column; }
-            .form-actions .btn { width: 100%; }
-            .history-item { flex-direction: column; align-items: flex-start; }
-            .history-item-actions { width: 100%; margin-top: var(--space-md); }
-            .settings-panel { width: 100%; right: -100%; }
-            .results-grid { grid-template-columns: 1fr; }
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .breadcrumb {
+                flex-wrap: wrap;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .card {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .ubs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .specialties-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-icon {
+                font-size: 4rem;
+            }
+            
+            .vacancies-count {
+                font-size: 3rem;
+            }
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-1 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+
+        .mt-1 {
+            margin-top: 1rem;
+        }
+
+        .mt-2 {
+            margin-top: 2rem;
+        }
+
+        .d-none {
+            display: none;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .align-center {
+            align-items: center;
         }
     </style>
 </head>
-<body data-theme="dark">
-
-    <div class="topbar">
-        <div class="logo">ElsonAvalia</div>
-        <button class="btn-icon" id="btnSettings">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
-        </button>
-    </div>
-
-    <div class="settings-overlay" id="settingsOverlay"></div>
-    <div class="settings-panel" id="settingsPanel">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xl);">
-            <h2>Configurações</h2>
-            <button class="btn-icon" id="btnCloseSettings"><span style="font-size: 1.5rem;">✕</span></button>
-        </div>
-
-        <div class="settings-section">
-            <h3>Perfil</h3>
-            <div class="form-group">
-                <label for="profileName">Seu Nome</label>
-                <input type="text" id="profileName" placeholder="Ex: Prof. Elson">
-            </div>
-            <button class="btn btn-secondary" id="btnSaveProfile" style="width: 100%;">Salvar Perfil</button>
-        </div>
-
-        <div class="settings-section">
-            <h3>Tema</h3>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Tema Escuro</span>
-                <div class="toggle-checkbox">
-                    <input type="checkbox" id="themeToggle">
-                    <label for="themeToggle"></label>
+<body>
+    <div class="app">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon">🏥</div>
+                        <div class="logo-text">
+                            <h1>Acesse UBS</h1>
+                            <p>Sistema de Agendamento de Consultas</p>
+                        </div>
+                    </div>
+                    <div class="nav-links">
+                        <a href="#" class="nav-link"><i class="fas fa-home"></i> Início</a>
+                        <a href="#" class="nav-link"><i class="fas fa-info-circle"></i> Sobre</a>
+                        <a href="#" class="nav-link"><i class="fas fa-phone-alt"></i> Contato</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        </header>
 
-        <div class="settings-section">
-            <h3>Dados</h3>
-            <button class="btn" id="btnClear" style="width: 100%; background-color: var(--color-danger); color: white;">Limpar Histórico</button>
-        </div>
-    </div>
-
-    <div class="container">
-        <main id="screenMenu">
-            <div class="header">
-                <h1>ElsonAvalia</h1>
-                <p id="welcomeText" style="color: var(--color-text-secondary);">A nova era das avaliações físicas.</p>
-            </div>
-
-            <div class="card">
-                <button class="btn btn-primary" id="btnNewEval">Iniciar Nova Avaliação</button>
-            </div>
-
-            <div class="card">
-                <h2>Histórico de Avaliações</h2>
-                <div class="history-list" id="historyList"></div>
-                <p id="emptyHistory" class="hidden" style="text-align: center; color: var(--color-text-secondary);">Nenhuma avaliação encontrada</p>
-            </div>
-        </main>
-
-        <main id="screenForm" class="hidden">
-            <form id="evalForm">
-                <div class="card">
-                    <h2>Dados do Aluno</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="name">Nome *</label>
-                            <input type="text" id="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="age">Idade *</label>
-                            <input type="number" id="age" required min="18" max="100">
-                        </div>
-                        <div class="form-group">
-                            <label for="gender">Sexo *</label>
-                            <select id="gender" required>
-                                <option value="">Selecione...</option>
-                                <option value="male">Masculino</option>
-                                <option value="female">Feminino</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="weight">Peso (kg) *</label>
-                            <input type="number" id="weight" required step="0.1" min="30" max="300">
-                        </div>
-                        <div class="form-group">
-                            <label for="height">Altura (cm) *</label>
-                            <input type="number" id="height" required min="140" max="220">
+        <main>
+            <div class="container">
+                <!-- Tela Inicial -->
+                <div id="home-screen" class="screen active">
+                    <div class="card">
+                        <div class="hero">
+                            <div class="hero-icon">🏥</div>
+                            <h2>Agende sua consulta de forma rápida e fácil</h2>
+                            <p>O Acesse UBS conecta você às Unidades Básicas de Saúde mais próximas, facilitando o agendamento de consultas e melhorando seu acesso aos serviços de saúde.</p>
+                            <button id="access-ubs-btn" class="btn btn-lg">
+                                <i class="fas fa-clinic-medical"></i> Acesse UBS
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <h2>Medidas de Circunferência (cm)</h2>
-                    <div class="form-grid">
-                        <div class="form-group"><label for="arm">Braço</label><input type="number" id="arm" step="0.1"></div>
-                        <div class="form-group"><label for="forearm">Antebraço</label><input type="number" id="forearm" step="0.1"></div>
-                        <div class="form-group"><label for="chest">Tórax</label><input type="number" id="chest" step="0.1"></div>
-                        <div class="form-group"><label for="waist">Cintura</label><input type="number" id="waist" step="0.1"></div>
-                        <div class="form-group"><label for="abdomen">Abdômen</label><input type="number" id="abdomen" step="0.1"></div>
-                        <div class="form-group"><label for="hip">Quadril</label><input type="number" id="hip" step="0.1"></div>
-                        <div class="form-group"><label for="thigh">Coxa</label><input type="number" id="thigh" step="0.1"></div>
-                        <div class="form-group"><label for="leg">Perna</label><input type="number" id="leg" step="0.1"></div>
+                <!-- Tela de UBS -->
+                <div id="ubs-screen" class="screen">
+                    <div class="navigation">
+                        <div class="breadcrumb">
+                            <span class="breadcrumb-item" id="back-to-home">
+                                <i class="fas fa-home"></i> Início
+                            </span>
+                            <span class="breadcrumb-separator">></span>
+                            <span class="breadcrumb-item active">UBS Disponíveis</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">Unidades Básicas de Saúde</h2>
+                        <p class="text-center mb-2">Selecione a UBS onde deseja agendar sua consulta</p>
+                        
+                        <div class="ubs-grid">
+                            <div class="ubs-card" data-ubs="Bacabal">
+                                <div class="ubs-icon">🏥</div>
+                                <div class="ubs-name">UBS do Bacabal</div>
+                                <div class="ubs-status"><i class="fas fa-check-circle"></i> Disponível</div>
+                            </div>
+                            <div class="ubs-card" data-ubs="Queluz">
+                                <div class="ubs-icon">🏥</div>
+                                <div class="ubs-name">UBS de Queluz</div>
+                                <div class="ubs-status"><i class="fas fa-check-circle"></i> Disponível</div>
+                            </div>
+                            <div class="ubs-card" data-ubs="Perim Mirim">
+                                <div class="ubs-icon">🏥</div>
+                                <div class="ubs-name">UBS de Perim Mirim</div>
+                                <div class="ubs-status"><i class="fas fa-check-circle"></i> Disponível</div>
+                            </div>
+                            <div class="ubs-card" data-ubs="Cubim">
+                                <div class="ubs-icon">🏥</div>
+                                <div class="ubs-name">UBS de Cubim</div>
+                                <div class="ubs-status"><i class="fas fa-check-circle"></i> Disponível</div>
+                            </div>
+                            <div class="ubs-card" data-ubs="Guarimã">
+                                <div class="ubs-icon">🏥</div>
+                                <div class="ubs-name">UBS de Guarimã</div>
+                                <div class="ubs-status"><i class="fas fa-check-circle"></i> Disponível</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <h2>Dobras Cutâneas (mm) - Pollock 7 *</h2>
-                    <div class="form-grid">
-                        <div class="form-group"><label for="subscapular">Subescapular</label><input type="number" id="subscapular" step="0.1" min="0"></div>
-                        <div class="form-group"><label for="triceps">Tricipital</label><input type="number" id="triceps" step="0.1" min="0"></div>
-                        <div class="form-group"><label for="pectoral">Peitoral</label><input type="number" id="pectoral" step="0.1" min="0"></div>
-                        <div class="form-group"><label for="midaxillary">Axilar Média</label><input type="number" id="midaxillary" step="0.1" min="0"></div>
-                        <div class="form-group"><label for="suprailiac">Supra-ilíaca</label><input type="number" id="suprailiac" step="0.1" min="0"></div>
-                        <div class="form-group"><label for="abdominalSkinfold">Abdominal</label><input type="number" id="abdominalSkinfold" step="0.1" min="0"></div>
-                        <div class="form-group"><label for="thighSkinfold">Coxa</label><input type="number" id="thighSkinfold" step="0.1" min="0"></div>
+                <!-- Tela de Especialidades -->
+                <div id="specialties-screen" class="screen">
+                    <div class="navigation">
+                        <div class="breadcrumb">
+                            <span class="breadcrumb-item" id="back-to-home-2">
+                                <i class="fas fa-home"></i> Início
+                            </span>
+                            <span class="breadcrumb-separator">></span>
+                            <span class="breadcrumb-item" id="back-to-ubs">UBS Disponíveis</span>
+                            <span class="breadcrumb-separator">></span>
+                            <span class="breadcrumb-item active" id="current-ubs">UBS Selecionada</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">Especialidades Médicas</h2>
+                        <p class="text-center mb-2">Selecione a especialidade desejada para verificar a disponibilidade de vagas</p>
+                        
+                        <div class="specialties-grid">
+                            <div class="specialty-card" data-specialty="clinico-geral">
+                                <div class="specialty-icon">👨‍⚕️</div>
+                                <div class="specialty-name">Clínico Geral</div>
+                            </div>
+                            <div class="specialty-card" data-specialty="pediatria">
+                                <div class="specialty-icon">👶</div>
+                                <div class="specialty-name">Pediatria</div>
+                            </div>
+                            <div class="specialty-card" data-specialty="pre-natal">
+                                <div class="specialty-icon">🤰</div>
+                                <div class="specialty-name">Pré-natal</div>
+                            </div>
+                            <div class="specialty-card" data-specialty="ginecologia">
+                                <div class="specialty-icon">👩</div>
+                                <div class="specialty-name">Ginecologia</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="btnBackForm">Voltar</button>
-                    <button type="button" class="btn btn-secondary" id="btnDraftForm">Rascunho</button>
-                    <button type="submit" class="btn btn-primary">Calcular</button>
-                </div>
-            </form>
-        </main>
-
-        <main id="screenResults" class="hidden">
-            <div class="card">
-                <h2>Resultados - <span id="resultName"></span></h2>
-                
-                <div id="alertContainer"></div>
-                
-                <div class="results-grid" id="resultsGrid"></div>
-
-                <div class="final-grade">
-                    <div class="final-grade-value" id="finalGradeValue"></div>
-                    <div style="font-size: 1.3rem; font-weight: 500; margin-top: var(--space-md);" id="finalGradeText"></div>
-                </div>
-
-                <div style="text-align: center; margin-top: var(--space-lg);">
-                    <button class="btn btn-secondary" id="btnBackResults">Voltar ao Menu</button>
+                <!-- Tela de Vagas -->
+                <div id="vacancies-screen" class="screen">
+                    <div class="navigation">
+                        <div class="breadcrumb">
+                            <span class="breadcrumb-item" id="back-to-home-3">
+                                <i class="fas fa-home"></i> Início
+                            </span>
+                            <span class="breadcrumb-separator">></span>
+                            <span class="breadcrumb-item" id="back-to-ubs-2">UBS Disponíveis</span>
+                            <span class="breadcrumb-separator">></span>
+                            <span class="breadcrumb-item" id="back-to-specialties">Especialidades</span>
+                            <span class="breadcrumb-separator">></span>
+                            <span class="breadcrumb-item active" id="current-specialty">Especialidade</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title" id="vacancy-title">Vagas Disponíveis</h2>
+                        
+                        <div class="vacancies-info">
+                            <div class="vacancies-count">0/30</div>
+                            <div class="vacancies-text">Vagas disponíveis</div>
+                        </div>
+                        
+                        <div class="vacancies-alert">
+                            <i class="fas fa-exclamation-circle"></i>
+                            No momento não há vagas disponíveis para esta especialidade.
+                            Tente novamente em breve ou entre em contato com a UBS.
+                        </div>
+                        
+                        <button id="schedule-appointment" class="btn btn-block btn-lg">
+                            <i class="fas fa-calendar-check"></i> Agendar Consulta
+                        </button>
+                    </div>
                 </div>
             </div>
         </main>
+
+        <!-- Modal de Confirmação -->
+        <div id="confirmation-modal" class="modal">
+            <div class="modal-content">
+                <button class="modal-close">&times;</button>
+                <div class="modal-icon">
+                    <i class="fas fa-calendar-check pulse"></i>
+                </div>
+                <h3 class="modal-title">Confirmação de Agendamento</h3>
+                <p class="modal-text" id="confirmation-text">Tem certeza que deseja agendar uma consulta?</p>
+                <div class="modal-actions">
+                    <button id="confirm-appointment" class="btn btn-block">Confirmar Agendamento</button>
+                    <button id="cancel-appointment" class="btn btn-block btn-outline">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-column">
+                        <h3>Acesse UBS</h3>
+                        <p>Sistema de agendamento de consultas para Unidades Básicas de Saúde, facilitando o acesso da população aos serviços de saúde pública.</p>
+            </div>
+        </footer>
     </div>
 
     <script>
-        // ============================================
-        // SISTEMA PROFISSIONAL DE AVALIAÇÃO FÍSICA - V3.0
-        // ✅ TOTALMENTE CORRIGIDO - SEM ERROS DE CÁLCULO
-        // ============================================
-
-        /**
-         * FUNÇÃO AUXILIAR: Converter valor para número seguro
-         * Retorna 0 se inválido
-         */
-        function toSafeNumber(value, defaultValue = 0) {
-            if (value === null || value === undefined || value === '') {
-                return defaultValue;
-            }
-            const num = parseFloat(value);
-            return isFinite(num) ? num : defaultValue;
+        // Elementos da interface
+        const screens = document.querySelectorAll('.screen');
+        const homeScreen = document.getElementById('home-screen');
+        const ubsScreen = document.getElementById('ubs-screen');
+        const specialtiesScreen = document.getElementById('specialties-screen');
+        const vacanciesScreen = document.getElementById('vacancies-screen');
+        const modal = document.getElementById('confirmation-modal');
+        
+        // Botões de navegação
+        const accessUbsBtn = document.getElementById('access-ubs-btn');
+        const backToHomeBtns = document.querySelectorAll('#back-to-home, #back-to-home-2, #back-to-home-3');
+        const backToUbsBtns = document.querySelectorAll('#back-to-ubs, #back-to-ubs-2');
+        const backToSpecialtiesBtn = document.getElementById('back-to-specialties');
+        const scheduleAppointmentBtn = document.getElementById('schedule-appointment');
+        const confirmAppointmentBtn = document.getElementById('confirm-appointment');
+        const cancelAppointmentBtn = document.getElementById('cancel-appointment');
+        const modalCloseBtn = document.querySelector('.modal-close');
+        
+        // Elementos de informação
+        const currentUbsElement = document.getElementById('current-ubs');
+        const currentSpecialtyElement = document.getElementById('current-specialty');
+        const vacancyTitle = document.getElementById('vacancy-title');
+        const confirmationText = document.getElementById('confirmation-text');
+        
+        // Variáveis para armazenar seleções
+        let selectedUbs = '';
+        let selectedSpecialty = '';
+        
+        // Mapeamento de especialidades
+        const specialtiesMap = {
+            'clinico-geral': 'Clínico Geral',
+            'pediatria': 'Pediatria',
+            'pre-natal': 'Pré-natal',
+            'ginecologia': 'Ginecologia'
+        };
+        
+        // Função para mudar de tela
+        function showScreen(screenToShow) {
+            screens.forEach(screen => {
+                screen.classList.remove('active');
+            });
+            screenToShow.classList.add('active');
         }
-
-        /**
-         * Módulo de Cálculos Corporais Avançados
-         */
-        const BodyMetrics = {
-            IMC_RANGES: {
-                MAGREZA_GRAVE: { min: 0, max: 16.9, label: 'Magreza Grave', risco: 'CRÍTICO' },
-                MAGREZA_MODERADA: { min: 17, max: 18.4, label: 'Magreza Moderada', risco: 'ALTO' },
-                SAUDÁVEL: { min: 18.5, max: 24.9, label: 'Saudável', risco: 'NORMAL' },
-                SOBREPESO: { min: 25, max: 29.9, label: 'Sobrepeso', risco: 'MODERADO' },
-                OBESIDADE_I: { min: 30, max: 34.9, label: 'Obesidade Grau I', risco: 'ALTO' },
-                OBESIDADE_II: { min: 35, max: 39.9, label: 'Obesidade Grau II', risco: 'MUITO_ALTO' },
-                OBESIDADE_III: { min: 40, max: 999, label: 'Obesidade Grau III', risco: 'CRÍTICO' }
-            },
-
-            FAT_RANGES: {
-                MALE: {
-                    EXCELLENT: { min: 0, max: 10, label: 'Excelente' },
-                    GOOD: { min: 11, max: 20, label: 'Bom' },
-                    ACCEPTABLE: { min: 21, max: 25, label: 'Aceitável' },
-                    POOR: { min: 26, max: 999, label: 'Inadequado' }
-                },
-                FEMALE: {
-                    EXCELLENT: { min: 0, max: 16, label: 'Excelente' },
-                    GOOD: { min: 17, max: 26, label: 'Bom' },
-                    ACCEPTABLE: { min: 27, max: 32, label: 'Aceitável' },
-                    POOR: { min: 33, max: 999, label: 'Inadequado' }
-                }
-            },
-
-            calcularIMC(peso, altura) {
-                peso = toSafeNumber(peso);
-                altura = toSafeNumber(altura);
+        
+        // Event Listeners
+        accessUbsBtn.addEventListener('click', () => {
+            showScreen(ubsScreen);
+        });
+        
+        // Navegação de volta para a tela inicial
+        backToHomeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showScreen(homeScreen);
+            });
+        });
+        
+        // Navegação de volta para a tela de UBS
+        backToUbsBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showScreen(ubsScreen);
+            });
+        });
+        
+        // Navegação de volta para a tela de especialidades
+        backToSpecialtiesBtn.addEventListener('click', () => {
+            showScreen(specialtiesScreen);
+        });
+        
+        // Seleção de UBS
+        document.querySelectorAll('.ubs-card').forEach(card => {
+            card.addEventListener('click', () => {
+                selectedUbs = card.getAttribute('data-ubs');
+                currentUbsElement.textContent = `UBS ${selectedUbs}`;
                 
-                console.log(`📐 Calculando IMC: peso=${peso}kg, altura=${altura}cm`);
+                showScreen(specialtiesScreen);
+            });
+        });
+        
+        // Seleção de especialidade
+        document.querySelectorAll('.specialty-card').forEach(card => {
+            card.addEventListener('click', () => {
+                selectedSpecialty = card.getAttribute('data-specialty');
+                const specialtyName = specialtiesMap[selectedSpecialty];
                 
-                if (peso <= 0 || altura <= 0) {
-                    console.error('❌ Peso ou altura inválidos para IMC');
-                    return 0;
-                }
-
-                const alturaMetros = altura / 100;
-                const imc = peso / (alturaMetros * alturaMetros);
+                currentSpecialtyElement.textContent = specialtyName;
+                vacancyTitle.textContent = `Vagas - ${specialtyName}`;
                 
-                console.log(`✅ IMC calculado: ${imc.toFixed(2)}`);
-                return imc;
-            },
-
-            obterClassificacaoIMC(imc) {
-                imc = toSafeNumber(imc);
-                for (const [chave, range] of Object.entries(this.IMC_RANGES)) {
-                    if (imc >= range.min && imc <= range.max) {
-                        return range;
-                    }
-                }
-                return this.IMC_RANGES.OBESIDADE_III;
-            },
-
-            calcularDensidade(sumDobras, idade, sexo) {
-                sumDobras = toSafeNumber(sumDobras, 0);
-                idade = toSafeNumber(idade, 30);
-                
-                console.log(`🔬 Calculando densidade: dobras=${sumDobras}mm, idade=${idade} anos, sexo=${sexo}`);
-
-                const sumPowers = sumDobras * sumDobras;
-                let densidade;
-                
-                if (sexo === 'male') {
-                    densidade = 1.112 - (0.00043499 * sumDobras) + 
-                              (0.00000055 * sumPowers) - (0.00028826 * idade);
-                } else {
-                    densidade = 1.097 - (0.00046971 * sumDobras) + 
-                              (0.00000056 * sumPowers) - (0.00012828 * idade);
-                }
-                
-                console.log(`✅ Densidade calculada: ${densidade.toFixed(6)}`);
-                return densidade;
-            },
-
-            calcularPercentualGordura(densidade) {
-                densidade = toSafeNumber(densidade, 1.05);
-                
-                console.log(`📊 Calculando % gordura: densidade=${densidade.toFixed(6)}`);
-
-                if (densidade <= 0 || !isFinite(densidade)) {
-                    console.error('❌ Densidade inválida');
-                    return 0;
-                }
-
-                const percentual = ((4.95 / densidade) - 4.5) * 100;
-                const limpo = Math.max(0, Math.min(60, percentual));
-                
-                console.log(`✅ % Gordura calculado: ${limpo.toFixed(2)}%`);
-                return limpo;
-            },
-
-            obterClassificacaoGordura(percentualGordura, sexo) {
-                percentualGordura = toSafeNumber(percentualGordura);
-                const ranges = this.FAT_RANGES[sexo === 'male' ? 'MALE' : 'FEMALE'];
-                
-                for (const range of Object.values(ranges)) {
-                    if (percentualGordura >= range.min && percentualGordura <= range.max) {
-                        return range;
-                    }
-                }
-                return ranges.POOR;
-            },
-
-            calcularTMB(peso, altura, idade, sexo) {
-                peso = toSafeNumber(peso);
-                altura = toSafeNumber(altura);
-                idade = toSafeNumber(idade);
-                
-                console.log(`🔥 Calculando TMB`);
-
-                let tmb;
-                if (sexo === 'male') {
-                    tmb = 10 * peso + 6.25 * altura - 5 * idade + 5;
-                } else {
-                    tmb = 10 * peso + 6.25 * altura - 5 * idade - 161;
-                }
-                
-                console.log(`✅ TMB calculada: ${tmb.toFixed(0)} kcal/dia`);
-                return tmb;
-            },
-
-            validarDados(peso, altura, idade, sexo) {
-                const alertas = [];
-                peso = toSafeNumber(peso);
-                altura = toSafeNumber(altura);
-                idade = toSafeNumber(idade);
-
-                console.log(`🔍 Validando dados: peso=${peso}, altura=${altura}, idade=${idade}`);
-
-                if (peso <= 0 || peso > 300) {
-                    alertas.push({
-                        tipo: 'CRÍTICO',
-                        mensagem: `❌ ERRO: Peso ${peso}kg inválido! Use entre 30-300kg`,
-                        score_penalty: 50
-                    });
-                }
-
-                if (altura <= 0 || altura > 250) {
-                    alertas.push({
-                        tipo: 'CRÍTICO',
-                        mensagem: `❌ ERRO: Altura ${altura}cm inválida! Use entre 140-220cm`,
-                        score_penalty: 50
-                    });
-                }
-
-                if (idade <= 0 || idade > 120) {
-                    alertas.push({
-                        tipo: 'CRÍTICO',
-                        mensagem: `❌ ERRO: Idade ${idade} inválida! Use entre 18-100`,
-                        score_penalty: 50
-                    });
-                }
-
-                const imc = this.calcularIMC(peso, altura);
-                if (imc < 16.9 || imc > 45) {
-                    alertas.push({
-                        tipo: 'CRÍTICO',
-                        mensagem: `⚠️ AVISO: IMC ${imc.toFixed(1)} em nível crítico. Consulte profissional.`,
-                        score_penalty: 15
-                    });
-                }
-
-                return alertas;
+                showScreen(vacanciesScreen);
+            });
+        });
+        
+        // Agendar consulta
+        scheduleAppointmentBtn.addEventListener('click', () => {
+            const specialtyName = specialtiesMap[selectedSpecialty];
+            confirmationText.textContent = `Tem certeza que deseja agendar uma consulta de ${specialtyName} na ${selectedUbs}?`;
+            modal.classList.add('active');
+        });
+        
+        // Confirmar agendamento
+        confirmAppointmentBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+            
+            // Simular processamento
+            setTimeout(() => {
+                alert('Sua solicitação de agendamento foi enviada! Entraremos em contato em breve para confirmar a consulta.');
+                showScreen(homeScreen);
+            }, 500);
+        });
+        
+        // Cancelar agendamento
+        cancelAppointmentBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+        
+        // Fechar modal
+        modalCloseBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+        
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
             }
-        };
-
-        /**
-         * Módulo de Sistema de Pontuação
-         */
-        const SistemaAvaliacao = {
-            calcularScore(dados, metricas) {
-                console.log('🎯 Iniciando cálculo de score...');
-                
-                let score = 100;
-                const penalidades = [];
-
-                const alertas = BodyMetrics.validarDados(
-                    toSafeNumber(dados.weight),
-                    toSafeNumber(dados.height),
-                    toSafeNumber(dados.age),
-                    dados.gender
-                );
-
-                if (alertas.length > 0) {
-                    const maxPenalty = Math.max(...alertas.map(a => a.score_penalty || 0));
-                    score -= maxPenalty;
-                    console.warn(`⚠️ Alertas detectados: -${maxPenalty} pts`);
-                }
-
-                const imc = toSafeNumber(metricas.imc);
-                const classIMC = BodyMetrics.obterClassificacaoIMC(imc);
-                
-                if (classIMC.label === 'Saudável') {
-                    penalidades.push({ criterio: '✅ IMC', detracao: 0, label: classIMC.label });
-                } else if (classIMC.label === 'Sobrepeso' || classIMC.label === 'Magreza Moderada') {
-                    penalidades.push({ criterio: '⚠️ IMC', detracao: 10, label: classIMC.label });
-                    score -= 10;
-                } else {
-                    penalidades.push({ criterio: '🚨 IMC', detracao: 20, label: classIMC.label });
-                    score -= 20;
-                }
-
-                const gordura = toSafeNumber(metricas.percentualGordura);
-                const classGordura = BodyMetrics.obterClassificacaoGordura(gordura, dados.gender);
-                
-                if (classGordura.label === 'Excelente') {
-                    penalidades.push({ criterio: '✨ Gordura', detracao: 0, label: classGordura.label });
-                } else if (classGordura.label === 'Bom') {
-                    penalidades.push({ criterio: '✅ Gordura', detracao: 5, label: classGordura.label });
-                    score -= 5;
-                } else if (classGordura.label === 'Aceitável') {
-                    penalidades.push({ criterio: '⚠️ Gordura', detracao: 12, label: classGordura.label });
-                    score -= 12;
-                } else {
-                    penalidades.push({ criterio: '⚠️ Gordura', detracao: 20, label: classGordura.label });
-                    score -= 20;
-                }
-
-                score = Math.max(0, Math.min(100, score));
-                console.log(`✅ Score final: ${score}`);
-
-                return { score, penalidades, alertas: alertas || [] };
-            },
-
-            classificarScore(score) {
-                score = toSafeNumber(score);
-                
-                if (score >= 95) {
-                    return { label: '✨ EXCELENTE', cor: '#00F260', status: 'PERFEITO' };
-                }
-                if (score >= 85) {
-                    return { label: '✅ BOM', cor: '#38a169', status: 'BOM' };
-                }
-                if (score >= 70) {
-                    return { label: '✓ Aceitável', cor: '#0575E6', status: 'ACEITAVEL' };
-                }
-                if (score >= 50) {
-                    return { label: '⚠️ Regular', cor: '#ed8936', status: 'REGULAR' };
-                }
-                if (score >= 30) {
-                    return { label: '⚠️ Ruim', cor: '#e53e3e', status: 'RUIM' };
-                }
-                return { label: '🚨 CRÍTICO', cor: '#c53030', status: 'CRITICO' };
-            }
-        };
-
-        /**
-         * Aplicação Principal
-         */
-        const APP = {
-            data: { history: [], profile: '', theme: 'dark' },
-            els: {},
-
-            init() {
-                this.cacheElements();
-                this.loadData();
-                this.setupEvents();
-                this.applyTheme(this.data.theme);
-                this.renderHistory();
-                this.updateWelcome();
-                this.showScreen('screenMenu');
-                console.log('✅ Aplicação inicializada');
-            },
-
-            cacheElements() {
-                this.els = {
-                    btnSettings: document.getElementById('btnSettings'),
-                    btnCloseSettings: document.getElementById('btnCloseSettings'),
-                    settingsPanel: document.getElementById('settingsPanel'),
-                    settingsOverlay: document.getElementById('settingsOverlay'),
-                    profileName: document.getElementById('profileName'),
-                    btnSaveProfile: document.getElementById('btnSaveProfile'),
-                    themeToggle: document.getElementById('themeToggle'),
-                    btnClear: document.getElementById('btnClear'),
-                    
-                    screenMenu: document.getElementById('screenMenu'),
-                    welcomeText: document.getElementById('welcomeText'),
-                    btnNewEval: document.getElementById('btnNewEval'),
-                    historyList: document.getElementById('historyList'),
-                    emptyHistory: document.getElementById('emptyHistory'),
-                    
-                    screenForm: document.getElementById('screenForm'),
-                    evalForm: document.getElementById('evalForm'),
-                    btnBackForm: document.getElementById('btnBackForm'),
-                    btnDraftForm: document.getElementById('btnDraftForm'),
-                    
-                    screenResults: document.getElementById('screenResults'),
-                    resultName: document.getElementById('resultName'),
-                    alertContainer: document.getElementById('alertContainer'),
-                    resultsGrid: document.getElementById('resultsGrid'),
-                    finalGradeValue: document.getElementById('finalGradeValue'),
-                    finalGradeText: document.getElementById('finalGradeText'),
-                    btnBackResults: document.getElementById('btnBackResults'),
-                };
-            },
-
-            loadData() {
-                try {
-                    this.data.history = JSON.parse(localStorage.getItem('history')) || [];
-                    this.data.profile = localStorage.getItem('profile') || '';
-                    this.data.theme = localStorage.getItem('theme') || 'dark';
-                } catch (e) {
-                    console.error('❌ Erro ao carregar dados:', e);
-                    this.data = { history: [], profile: '', theme: 'dark' };
-                }
-            },
-
-            saveData() {
-                try {
-                    localStorage.setItem('history', JSON.stringify(this.data.history));
-                    localStorage.setItem('profile', this.data.profile);
-                    localStorage.setItem('theme', this.data.theme);
-                } catch (e) {
-                    console.error('❌ Erro ao salvar dados:', e);
-                }
-            },
-
-            setupEvents() {
-                this.els.btnSettings.addEventListener('click', () => this.toggleSettings(true));
-                this.els.btnCloseSettings.addEventListener('click', () => this.toggleSettings(false));
-                this.els.settingsOverlay.addEventListener('click', () => this.toggleSettings(false));
-                this.els.btnSaveProfile.addEventListener('click', () => this.saveProfile());
-                this.els.themeToggle.addEventListener('change', () => this.toggleTheme());
-                this.els.btnClear.addEventListener('click', () => this.clearData());
-                
-                this.els.btnNewEval.addEventListener('click', () => this.showScreen('screenForm'));
-                this.els.historyList.addEventListener('click', (e) => this.handleHistoryAction(e));
-                
-                this.els.evalForm.addEventListener('submit', (e) => this.submitForm(e));
-                this.els.btnBackForm.addEventListener('click', () => this.showScreen('screenMenu'));
-                this.els.btnDraftForm.addEventListener('click', () => this.saveDraft());
-                
-                this.els.btnBackResults.addEventListener('click', () => this.showScreen('screenMenu'));
-                
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape') this.toggleSettings(false);
-                });
-            },
-
-            toggleSettings(show) {
-                this.els.settingsPanel.classList.toggle('active', show);
-                this.els.settingsOverlay.classList.toggle('active', show);
-                document.body.style.overflow = show ? 'hidden' : '';
-            },
-
-            saveProfile() {
-                this.data.profile = this.els.profileName.value;
-                this.saveData();
-                this.updateWelcome();
-                
-                const btn = this.els.btnSaveProfile;
-                const txt = btn.textContent;
-                btn.textContent = '✓ Salvo!';
-                setTimeout(() => btn.textContent = txt, 2000);
-            },
-
-            updateWelcome() {
-                this.els.welcomeText.textContent = this.data.profile 
-                    ? `Bem-vindo, ${this.data.profile}.` 
-                    : 'A nova era das avaliações físicas.';
-                this.els.profileName.value = this.data.profile;
-            },
-
-            toggleTheme() {
-                this.data.theme = this.data.theme === 'dark' ? 'light' : 'dark';
-                this.applyTheme(this.data.theme);
-                this.saveData();
-            },
-
-            applyTheme(theme) {
-                document.body.dataset.theme = theme;
-                this.els.themeToggle.checked = theme === 'dark';
-            },
-
-            clearData() {
-                if (confirm('Tem certeza? Esta ação não pode ser desfeita!')) {
-                    this.data.history = [];
-                    this.saveData();
-                    this.renderHistory();
-                    alert('✓ Histórico limpo!');
-                    this.toggleSettings(false);
-                }
-            },
-
-            renderHistory() {
-                const sorted = [...this.data.history].sort((a, b) => b.id - a.id);
-                this.els.historyList.innerHTML = '';
-                this.els.emptyHistory.classList.toggle('hidden', sorted.length > 0);
-
-                sorted.forEach(item => {
-                    const date = new Date(parseInt(item.id)).toLocaleString('pt-BR');
-                    const statusText = item.status === 'complete' ? 'Completa' : 'Rascunho';
-                    const statusColor = item.status === 'complete' ? 'var(--color-success)' : 'var(--color-warning)';
-
-                    const div = document.createElement('div');
-                    div.className = 'history-item';
-                    div.innerHTML = `
-                        <div class="history-item-info">
-                            <h3>${item.data.name || 'Sem nome'}</h3>
-                            <p>${date}</p>
-                        </div>
-                        <div class="history-item-actions">
-                            <span class="status-badge" style="background-color: ${statusColor};">${statusText}</span>
-                            <button class="btn btn-secondary" data-action="load" data-id="${item.id}" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">Ver</button>
-                            <button class="btn btn-secondary" data-action="delete" data-id="${item.id}" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; background-color: var(--color-danger); color: white;">Del</button>
-                        </div>
-                    `;
-                    this.els.historyList.appendChild(div);
-                });
-            },
-
-            handleHistoryAction(e) {
-                const btn = e.target.closest('button');
-                if (!btn) return;
-                const { action, id } = btn.dataset;
-
-                if (action === 'delete') {
-                    if (confirm('Confirmar exclusão?')) {
-                        this.data.history = this.data.history.filter(h => h.id != id);
-                        this.saveData();
-                        this.renderHistory();
-                    }
-                } else if (action === 'load') {
-                    const item = this.data.history.find(h => h.id == id);
-                    if (item) {
-                        this.loadFormData(item.data);
-                        this.els.evalForm.dataset.id = item.id;
-                        this.showScreen('screenForm');
-                    }
-                }
-            },
-
-            loadFormData(data) {
-                try {
-                    this.clearForm();
-                    if (!data || typeof data !== 'object') {
-                        console.error('❌ Dados inválidos');
-                        return;
-                    }
-                    
-                    Object.entries(data).forEach(([key, value]) => {
-                        const elemento = this.els.evalForm.elements[key];
-                        if (elemento) {
-                            elemento.value = String(value !== null && value !== undefined ? value : '');
-                        }
-                    });
-
-                    console.log('✅ Dados carregados');
-                } catch (e) {
-                    console.error('❌ Erro ao carregar:', e);
-                }
-            },
-
-            getFormData() {
-                const data = {};
-                this.els.evalForm.querySelectorAll('input, select').forEach(el => {
-                    data[el.id] = el.value.trim();
-                });
-                return data;
-            },
-
-            clearForm() {
-                this.els.evalForm.reset();
-                this.els.evalForm.dataset.id = '';
-            },
-
-            saveDraft() {
-                const data = this.getFormData();
-                if (!data.name) {
-                    alert('Insira o nome do aluno');
-                    return;
-                }
-                this.saveToHistory(data, 'draft');
-                alert('✓ Rascunho salvo!');
-                this.showScreen('screenMenu');
-            },
-
-            submitForm(e) {
-                e.preventDefault();
-                
-                console.log('📋 Submetendo formulário...');
-                
-                const data = this.getFormData();
-                
-                // Validações
-                if (!data.name || !data.age || !data.gender || !data.weight || !data.height) {
-                    alert('❌ Preencha todos os dados obrigatórios!');
-                    return;
-                }
-
-                const age = toSafeNumber(data.age);
-                const weight = toSafeNumber(data.weight);
-                const height = toSafeNumber(data.height);
-
-                if (age <= 0 || weight <= 0 || height <= 0) {
-                    alert('❌ Valores numéricos inválidos!');
-                    return;
-                }
-
-                // Validação de dobras
-                const dobras = [
-                    data.subscapular,
-                    data.triceps,
-                    data.pectoral,
-                    data.midaxillary
-                ]
-                .map(d => toSafeNumber(d, 0))
-                .filter(d => d > 0);
-
-                if (dobras.length < 4) {
-                    alert('❌ Preencha no mínimo os 4 primeiros valores de dobras!');
-                    return;
-                }
-
-                try {
-                    const results = this.calculateResults(data);
-                    this.saveToHistory(data, 'complete');
-                    this.displayResults(data, results);
-                } catch (error) {
-                    console.error('❌ ERRO AO CALCULAR:', error);
-                    alert(`❌ ERRO NA AVALIAÇÃO:\n\n${error.message}\n\nVerifique os dados e tente novamente.`);
-                }
-            },
-
-            saveToHistory(data, status) {
-                try {
-                    const id = this.els.evalForm.dataset.id || Date.now().toString();
-                    this.data.history = this.data.history.filter(h => h.id != id);
-                    this.data.history.push({ id, status, data });
-                    this.saveData();
-                    this.renderHistory();
-                    console.log(`✅ Salvo em histórico: ${status}`);
-                } catch (e) {
-                    console.error('❌ Erro ao salvar:', e);
-                }
-            },
-
-            calculateResults(data) {
-                console.log('🧮 INICIANDO CÁLCULOS...');
-                console.log('Dados recebidos:', data);
-
-                const age = toSafeNumber(data.age);
-                const gender = data.gender;
-                const weight = toSafeNumber(data.weight);
-                const height = toSafeNumber(data.height);
-
-                console.log(`Valores convertidos: idade=${age}, peso=${weight}kg, altura=${height}cm, sexo=${gender}`);
-
-                // Dobras
-                const skins = [
-                    toSafeNumber(data.subscapular, 0),
-                    toSafeNumber(data.triceps, 0),
-                    toSafeNumber(data.pectoral, 0),
-                    toSafeNumber(data.midaxillary, 0),
-                    toSafeNumber(data.suprailiac, 0),
-                    toSafeNumber(data.abdominalSkinfold, 0),
-                    toSafeNumber(data.thighSkinfold, 0)
-                ];
-
-                const sumDobras = skins.reduce((a, b) => a + b, 0);
-                console.log(`✓ Soma de dobras: ${sumDobras}mm`);
-
-                // Cálculos
-                const imc = BodyMetrics.calcularIMC(weight, height);
-                const densidade = BodyMetrics.calcularDensidade(sumDobras, age, gender);
-                const percentualGordura = BodyMetrics.calcularPercentualGordura(densidade);
-                const massaGorda = (percentualGordura / 100) * weight;
-                const massaMagra = weight - massaGorda;
-                const tmb = BodyMetrics.calcularTMB(weight, height, age, gender);
-
-                const alturaMetros = height / 100;
-                const pesoIdealMin = 18.5 * (alturaMetros * alturaMetros);
-                const pesoIdealMax = 24.9 * (alturaMetros * alturaMetros);
-
-                // Score
-                const { score, penalidades, alertas } = SistemaAvaliacao.calcularScore(data, {
-                    imc,
-                    percentualGordura
-                });
-
-                const classificacao = SistemaAvaliacao.classificarScore(score);
-
-                console.log('✅ CÁLCULOS CONCLUÍDOS COM SUCESSO');
-                console.log({
-                    imc: imc.toFixed(2),
-                    gordura: percentualGordura.toFixed(2) + '%',
-                    score: score.toFixed(0),
-                    classificacao: classificacao.label
-                });
-
-                return {
-                    imc,
-                    percentualGordura,
-                    massaGorda,
-                    massaMagra,
-                    tmb,
-                    pesoIdealMin,
-                    pesoIdealMax,
-                    score,
-                    classificacao,
-                    penalidades,
-                    alertas,
-                    classIMC: BodyMetrics.obterClassificacaoIMC(imc),
-                    classGordura: BodyMetrics.obterClassificacaoGordura(percentualGordura, gender)
-                };
-            },
-
-            displayResults(data, r) {
-                this.els.resultName.textContent = data.name;
-                
-                // Alertas
-                this.els.alertContainer.innerHTML = '';
-                if (r.alertas && r.alertas.length > 0) {
-                    r.alertas.forEach(alerta => {
-                        const div = document.createElement('div');
-                        div.className = `alert alert-${alerta.tipo === 'CRÍTICO' ? 'danger' : 'warning'}`;
-                        div.textContent = alerta.mensagem;
-                        this.els.alertContainer.appendChild(div);
-                    });
-                }
-
-                // Resultados
-                this.els.resultsGrid.innerHTML = `
-                    <div class="result-item">
-                        <strong>IMC</strong>
-                        <span>${r.imc.toFixed(2)}</span>
-                        <div style="font-size: 0.85rem; color: var(--color-text-secondary); margin-top: var(--space-xs);">${r.classIMC.label}</div>
-                    </div>
-                    <div class="result-item">
-                        <strong>% Gordura</strong>
-                        <span>${r.percentualGordura.toFixed(2)}%</span>
-                        <div style="font-size: 0.85rem; color: var(--color-text-secondary); margin-top: var(--space-xs);">${r.classGordura.label}</div>
-                    </div>
-                    <div class="result-item">
-                        <strong>Massa Gorda</strong>
-                        <span>${r.massaGorda.toFixed(2)} kg</span>
-                    </div>
-                    <div class="result-item">
-                        <strong>Massa Magra</strong>
-                        <span>${r.massaMagra.toFixed(2)} kg</span>
-                    </div>
-                    <div class="result-item">
-                        <strong>TMB</strong>
-                        <span>${r.tmb.toFixed(0)} kcal/dia</span>
-                    </div>
-                    <div class="result-item">
-                        <strong>Peso Ideal</strong>
-                        <span>${r.pesoIdealMin.toFixed(1)} - ${r.pesoIdealMax.toFixed(1)} kg</span>
-                    </div>
-                `;
-
-                this.els.finalGradeValue.textContent = r.score.toFixed(0);
-                this.els.finalGradeValue.style.color = r.classificacao.cor;
-                
-                this.els.finalGradeText.innerHTML = `
-                    <div style="font-size: 1.2rem; color: ${r.classificacao.cor}; font-weight: 700;">
-                        ${r.classificacao.label}
-                    </div>
-                    <div style="font-size: 0.9rem; color: var(--color-text-secondary); margin-top: var(--space-sm);">
-                        ${r.penalidades.map(p => `${p.criterio}: -${p.detracao} pts`).join(' | ')}
-                    </div>
-                `;
-
-                this.showScreen('screenResults');
-            },
-
-            showScreen(name) {
-                document.querySelectorAll('main').forEach(el => el.classList.add('hidden'));
-                const screen = document.getElementById(name);
-                if (screen) {
-                    screen.classList.remove('hidden');
-                }
-                window.scrollTo(0, 0);
-            }
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            APP.init();
         });
     </script>
 </body>
